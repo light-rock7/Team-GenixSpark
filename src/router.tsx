@@ -19,11 +19,6 @@ import { BriefApplications } from './pages/BriefApplications';
 import { NotFound } from './pages/NotFound';
 import { RouteError } from './pages/RouteError';
 import { ProtectedRoute, DashboardEntry } from './components/auth/ProtectedRoute';
-import { Marketplace } from './pages/marketplace/Marketplace';
-import { BriefDetails } from './pages/marketplace/BriefDetails';
-import { Applications } from './pages/marketplace/Applications';
-import { Collaboration } from './pages/marketplace/Collaboration';
-import { Recommendations } from './pages/marketplace/Recommendations';
 
 export const router = createBrowserRouter([
   {
@@ -152,5 +147,3 @@ export const router = createBrowserRouter([
     errorElement: <RouteError />,
   },
 ]);
-
-export default router;
