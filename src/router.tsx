@@ -15,6 +15,7 @@ import { CreatorApplications } from './pages/CreatorApplications';
 import { Marketplace } from './pages/Marketplace';
 import { BrandBriefNew } from './pages/BrandBriefNew';
 import { BriefDetail } from './pages/BriefDetail';
+import { BriefApplications } from './pages/BriefApplications';
 import { NotFound } from './pages/NotFound';
 import { ProtectedRoute, DashboardEntry } from './components/auth/ProtectedRoute';
 
@@ -34,6 +35,14 @@ export const router = createBrowserRouter([
       {
         path: 'briefs/:id',
         element: <BriefDetail />,
+      },
+      {
+        path: 'briefs/:id/applications',
+        element: (
+          <ProtectedRoute>
+            <BriefApplications />
+          </ProtectedRoute>
+        ),
       },
       {
         path: 'dashboard',
