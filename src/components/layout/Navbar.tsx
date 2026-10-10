@@ -50,6 +50,12 @@ export const Navbar: React.FC = () => {
             >
               Explore
             </Link>
+            <Link
+              to="/marketplace"
+              className="text-sm font-semibold text-violet-600 hover:text-violet-700 transition-colors flex items-center gap-1"
+            >
+              Marketplace
+            </Link>
             <a
               href="#features"
               className="text-sm font-medium text-slate-600 hover:text-violet-600 transition-colors"

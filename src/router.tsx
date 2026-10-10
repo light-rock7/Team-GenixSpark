@@ -7,6 +7,11 @@ import { DashboardCreator } from './pages/DashboardCreator';
 import { DashboardBrand } from './pages/DashboardBrand';
 import { NotFound } from './pages/NotFound';
 import { ProtectedRoute, DashboardEntry } from './components/auth/ProtectedRoute';
+import { Marketplace } from './pages/marketplace/Marketplace';
+import { BriefDetails } from './pages/marketplace/BriefDetails';
+import { Applications } from './pages/marketplace/Applications';
+import { Collaboration } from './pages/marketplace/Collaboration';
+import { Recommendations } from './pages/marketplace/Recommendations';
 
 export const router = createBrowserRouter([
   {
@@ -42,6 +47,26 @@ export const router = createBrowserRouter([
         ),
       },
       {
+        path: 'marketplace',
+        element: <Marketplace />,
+      },
+      {
+        path: 'marketplace/brief',
+        element: <BriefDetails />,
+      },
+      {
+        path: 'marketplace/applications',
+        element: <Applications />,
+      },
+      {
+        path: 'marketplace/collaboration',
+        element: <Collaboration />,
+      },
+      {
+        path: 'marketplace/recommendations',
+        element: <Recommendations />,
+      },
+      {
         path: '*',
         element: <NotFound />,
       },
@@ -56,3 +81,5 @@ export const router = createBrowserRouter([
     element: <AuthCallback />,
   },
 ]);
+
+export default router;
