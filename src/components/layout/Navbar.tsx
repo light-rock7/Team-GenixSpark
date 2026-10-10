@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import {
+  BriefcaseBusiness,
   Eye,
+  FilePlus2,
   Images,
   LayoutDashboard,
   LogOut,
@@ -27,15 +29,23 @@ export const Navbar: React.FC = () => {
     setMobileMenuOpen(false);
   };
 
-  const creatorLinks = user && profile?.role === 'creator' ? [
-    { to: '/dashboard/creator', label: 'Studio', icon: LayoutDashboard },
-    { to: '/creator/profile', label: 'Profile', icon: UserRound },
-    { to: '/creator/portfolio', label: 'Portfolio', icon: Images },
-    { to: '/marketplace', label: 'Discover', icon: Search },
-    { to: `/creators/${user.id}`, label: 'Public profile', icon: Eye },
-  ] : null;
+  const workspaceLinks = user && profile?.role === 'creator'
+    ? [
+        { to: '/dashboard/creator', label: 'Studio', icon: LayoutDashboard },
+        { to: '/creator/profile', label: 'Profile', icon: UserRound },
+        { to: '/creator/portfolio', label: 'Portfolio', icon: Images },
+        { to: '/marketplace', label: 'Discover', icon: Search },
+        { to: `/creators/${user.id}`, label: 'Public profile', icon: Eye },
+      ]
+    : user && profile?.role === 'brand'
+      ? [
+          { to: '/dashboard/brand', label: 'Workspace', icon: BriefcaseBusiness },
+          { to: '/brand/briefs/new', label: 'New brief', icon: FilePlus2 },
+          { to: '/marketplace', label: 'Discover', icon: Search },
+        ]
+      : null;
 
-  const creatorNavClass = ({ isActive }: { isActive: boolean }) =>
+  const navClass = ({ isActive }: { isActive: boolean }) =>
     `inline-flex items-center gap-2 rounded-lg px-3 py-2 text-[13px] font-semibold transition-colors ${
       isActive ? 'bg-slate-100 text-slate-950' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-950'
     }`;
@@ -58,16 +68,16 @@ export const Navbar: React.FC = () => {
           </Link>
 
           <nav className="hidden items-center gap-1 md:flex">
-            {creatorLinks ? (
-              creatorLinks.map(({ to, label, icon: Icon }) => (
-                <NavLink key={to} to={to} className={creatorNavClass}>
+            {workspaceLinks ? (
+              workspaceLinks.map(({ to, label, icon: Icon }) => (
+                <NavLink key={to} to={to} className={navClass}>
                   <Icon className="h-3.5 w-3.5" />
                   {label}
                 </NavLink>
               ))
             ) : (
               <>
-                <NavLink to="/marketplace" className={creatorNavClass}><Search className="h-3.5 w-3.5" /> Discover creators</NavLink>
+                <NavLink to="/marketplace" className={navClass}><Search className="h-3.5 w-3.5" /> Discover creators</NavLink>
                 <a href="/#creators" className="rounded-lg px-3 py-2 text-[13px] font-semibold text-slate-500 transition-colors hover:bg-slate-50 hover:text-slate-950">For creators</a>
                 <a href="/#brands" className="rounded-lg px-3 py-2 text-[13px] font-semibold text-slate-500 transition-colors hover:bg-slate-50 hover:text-slate-950">For brands</a>
                 <a href="/#workflow" className="rounded-lg px-3 py-2 text-[13px] font-semibold text-slate-500 transition-colors hover:bg-slate-50 hover:text-slate-950">Workflow proof</a>
@@ -84,7 +94,7 @@ export const Navbar: React.FC = () => {
 
             {user ? (
               <>
-                {profile?.role !== 'creator' && (
+                {!workspaceLinks && (
                   <Link to="/dashboard" className={getButtonClassName({ variant: 'outline', size: 'sm' })}>
                     <LayoutDashboard className="h-4 w-4" /> Dashboard
                   </Link>
@@ -119,8 +129,8 @@ export const Navbar: React.FC = () => {
       {mobileMenuOpen && (
         <div className="border-t border-slate-100 bg-white px-4 py-4 md:hidden">
           <div className="space-y-1">
-            {creatorLinks ? creatorLinks.map(({ to, label, icon: Icon }) => (
-              <NavLink key={to} to={to} onClick={() => setMobileMenuOpen(false)} className={creatorNavClass}>
+            {workspaceLinks ? workspaceLinks.map(({ to, label, icon: Icon }) => (
+              <NavLink key={to} to={to} onClick={() => setMobileMenuOpen(false)} className={navClass}>
                 <Icon className="h-4 w-4" /> {label}
               </NavLink>
             )) : (
