@@ -83,6 +83,38 @@ export const Navbar: React.FC = () => {
                 <a href="/#workflow" className="rounded-lg px-3 py-2 text-[13px] font-semibold text-slate-500 transition-colors hover:bg-slate-50 hover:text-slate-950">Workflow proof</a>
               </>
             )}
+          {/* Center Navigation Links */}
+          <nav className="hidden md:flex items-center gap-8">
+            <Link
+              to="/"
+              className="text-sm font-medium text-slate-600 hover:text-violet-600 transition-colors"
+            >
+              Explore
+            </Link>
+            <Link
+              to="/marketplace"
+              className="text-sm font-semibold text-violet-600 hover:text-violet-700 transition-colors flex items-center gap-1"
+            >
+              Marketplace
+            </Link>
+            <a
+              href="#features"
+              className="text-sm font-medium text-slate-600 hover:text-violet-600 transition-colors"
+            >
+              Platform Capabilities
+            </a>
+            <a
+              href="#workflows"
+              className="text-sm font-medium text-slate-600 hover:text-violet-600 transition-colors"
+            >
+              Workflow Transparency
+            </a>
+            <a
+              href="#briefs"
+              className="text-sm font-medium text-slate-600 hover:text-violet-600 transition-colors"
+            >
+              Creative Briefs
+            </a>
           </nav>
 
           <div className="hidden shrink-0 items-center gap-2.5 md:flex">
