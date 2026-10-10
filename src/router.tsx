@@ -5,22 +5,46 @@ import { Auth } from './pages/Auth';
 import { AuthCallback } from './pages/AuthCallback';
 import { DashboardCreator } from './pages/DashboardCreator';
 import { DashboardBrand } from './pages/DashboardBrand';
+import { CreatorProfileEdit } from './pages/CreatorProfileEdit';
+import { CreatorPortfolio } from './pages/CreatorPortfolio';
+import { CreatorPortfolioNew } from './pages/CreatorPortfolioNew';
+import { CreatorPublicProfile } from './pages/CreatorPublicProfile';
+import { CreatorCopilot } from './pages/CreatorCopilot';
+import { CreatorOpportunities } from './pages/CreatorOpportunities';
+import { CreatorApplications } from './pages/CreatorApplications';
+import { Marketplace } from './pages/Marketplace';
+import { BrandBriefNew } from './pages/BrandBriefNew';
+import { BriefDetail } from './pages/BriefDetail';
+import { BriefApplications } from './pages/BriefApplications';
 import { NotFound } from './pages/NotFound';
+import { RouteError } from './pages/RouteError';
 import { ProtectedRoute, DashboardEntry } from './components/auth/ProtectedRoute';
-import { Marketplace } from './pages/marketplace/Marketplace';
-import { BriefDetails } from './pages/marketplace/BriefDetails';
-import { Applications } from './pages/marketplace/Applications';
-import { Collaboration } from './pages/marketplace/Collaboration';
-import { Recommendations } from './pages/marketplace/Recommendations';
 
 export const router = createBrowserRouter([
   {
     path: '/',
     element: <AppLayout />,
+    errorElement: <RouteError />,
     children: [
       {
         index: true,
         element: <Home />,
+      },
+      {
+        path: 'marketplace',
+        element: <Marketplace />,
+      },
+      {
+        path: 'briefs/:id',
+        element: <BriefDetail />,
+      },
+      {
+        path: 'briefs/:id/applications',
+        element: (
+          <ProtectedRoute>
+            <BriefApplications />
+          </ProtectedRoute>
+        ),
       },
       {
         path: 'dashboard',
@@ -39,6 +63,58 @@ export const router = createBrowserRouter([
         ),
       },
       {
+        path: 'creator/profile',
+        element: (
+          <ProtectedRoute allowedRole="creator">
+            <CreatorProfileEdit />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: 'creator/copilot',
+        element: (
+          <ProtectedRoute allowedRole="creator">
+            <CreatorCopilot />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: 'creator/portfolio',
+        element: (
+          <ProtectedRoute allowedRole="creator">
+            <CreatorPortfolio />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: 'creator/portfolio/new',
+        element: (
+          <ProtectedRoute allowedRole="creator">
+            <CreatorPortfolioNew />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: 'opportunities',
+        element: (
+          <ProtectedRoute allowedRole="creator">
+            <CreatorOpportunities />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: 'creator/applications',
+        element: (
+          <ProtectedRoute allowedRole="creator">
+            <CreatorApplications />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: 'creators/:id',
+        element: <CreatorPublicProfile />,
+      },
+      {
         path: 'dashboard/brand',
         element: (
           <ProtectedRoute allowedRole="brand">
@@ -47,24 +123,12 @@ export const router = createBrowserRouter([
         ),
       },
       {
-        path: 'marketplace',
-        element: <Marketplace />,
-      },
-      {
-        path: 'marketplace/brief',
-        element: <BriefDetails />,
-      },
-      {
-        path: 'marketplace/applications',
-        element: <Applications />,
-      },
-      {
-        path: 'marketplace/collaboration',
-        element: <Collaboration />,
-      },
-      {
-        path: 'marketplace/recommendations',
-        element: <Recommendations />,
+        path: 'brand/briefs/new',
+        element: (
+          <ProtectedRoute allowedRole="brand">
+            <BrandBriefNew />
+          </ProtectedRoute>
+        ),
       },
       {
         path: '*',
@@ -75,11 +139,11 @@ export const router = createBrowserRouter([
   {
     path: '/auth',
     element: <Auth />,
+    errorElement: <RouteError />,
   },
   {
     path: '/auth/callback',
     element: <AuthCallback />,
+    errorElement: <RouteError />,
   },
 ]);
-
-export default router;
