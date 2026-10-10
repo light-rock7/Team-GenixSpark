@@ -10,6 +10,8 @@ import { CreatorPortfolio } from './pages/CreatorPortfolio';
 import { CreatorPortfolioNew } from './pages/CreatorPortfolioNew';
 import { CreatorPublicProfile } from './pages/CreatorPublicProfile';
 import { CreatorCopilot } from './pages/CreatorCopilot';
+import { CreatorOpportunities } from './pages/CreatorOpportunities';
+import { CreatorApplications } from './pages/CreatorApplications';
 import { Marketplace } from './pages/Marketplace';
 import { BrandBriefNew } from './pages/BrandBriefNew';
 import { BriefDetail } from './pages/BriefDetail';
@@ -78,6 +80,22 @@ export const router = createBrowserRouter([
         element: (
           <ProtectedRoute allowedRole="creator">
             <CreatorPortfolioNew />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: 'opportunities',
+        element: (
+          <ProtectedRoute allowedRole="creator">
+            <CreatorOpportunities />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: 'creator/applications',
+        element: (
+          <ProtectedRoute allowedRole="creator">
+            <CreatorApplications />
           </ProtectedRoute>
         ),
       },
