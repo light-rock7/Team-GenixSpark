@@ -115,7 +115,7 @@ export const CreatorOpportunities: React.FC = () => {
                       <span className="flex items-center gap-1"><IndianRupee className="h-3 w-3" />{budget.replace('INR ', '')}</span>
                       <span className="flex items-center gap-1"><CalendarDays className="h-3 w-3" />{brief.deadline ? new Date(`${brief.deadline}T00:00:00`).toLocaleDateString() : 'Flexible deadline'}</span>
                     </div>
-                    <Link to={`/briefs/${brief.id}`} className="inline-flex items-center gap-1 text-[11px] font-bold text-violet-700 hover:text-violet-800">View & apply <ArrowRight className="h-3.5 w-3.5" /></Link>
+                    <Link to={`/briefs/${brief.id}/applications`} className="inline-flex items-center gap-1 text-[11px] font-bold text-violet-700 hover:text-violet-800">View & apply <ArrowRight className="h-3.5 w-3.5" /></Link>
                   </div>
                 </article>
               );
