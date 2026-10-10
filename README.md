@@ -1,192 +1,206 @@
 # GenixSpark — AI Content Creator Marketplace
-> **Stage 1: Frontend Foundation & Authentication Gateway**
 
-GenixSpark is an AI Content Creator Marketplace engineered to connect prompt engineers and generative AI artists with forward-thinking brands. This repository contains the frontend foundation, role-based routing architecture, and Supabase authentication gateway delivered in Stage 1.
+GenixSpark is a workflow-aware marketplace for generative-AI creators and brands. Instead of treating AI creative work like generic freelancing, the product surfaces the signals brands actually need to evaluate: portfolio evidence, AI tool fluency, workflow context, structured brief requirements, explainable fit, and proposal status.
 
----
+## Product story
 
-## 🚀 Stage 1 Highlights & Capabilities
+**Creator experience**
 
-- **Modern Tech Stack**: React 19, TypeScript, Vite, Tailwind CSS v4, and `@supabase/supabase-js`.
-- **Role-Based Client Routing**: Dedicated shells for **AI Creators** (`/dashboard` / `/dashboard/creator`) and **Brands** (`/dashboard` / `/dashboard/brand`).
-- **Resilient Environment Fallback**: The landing page and platform shells render gracefully without crashing even if Supabase environment variables are missing, presenting clear setup notices instead of fake sessions.
-- **Contract-Strict Architecture**: User roles are verified strictly against `public.user_profiles`, never trusting editable client metadata for authorization.
-- **SPA Fallback Ready**: Complete `vercel.json` SPA rewrite configuration ensuring seamless page refreshes on nested routes.
+1. Create an AI-specific professional profile.
+2. Publish case studies with tools, skills, workflow summaries, prompt direction, and rights context.
+3. Use Creator Copilot to audit positioning without inventing capabilities or exposing proprietary prompts.
+4. Browse live briefs ranked by explicit profile-to-brief criteria.
+5. Submit and track proposals through shortlist, acceptance, rejection, or withdrawal.
 
----
+**Brand experience**
 
-## 📂 Project Architecture
+1. Define a structured creative brief with required AI tools, skills, deliverables, rights, budget, and deadline.
+2. Discover creators using transparent capability filters and fit reasons.
+3. Review creator profiles, portfolios, and workflow proof.
+4. Review applications, shortlist candidates, and award a brief.
+
+## What is implemented
+
+- **Authentication & roles** — Supabase email/password auth, creator/brand role provisioning, protected routing, RLS-backed profile access.
+- **Creator profiles** — professional headline, bio, skills, AI tools, specializations, availability, rates, links, avatar upload, public profile.
+- **AI portfolios** — case studies with media, tool/skill metadata, prompt summary, workflow summary, commercial rights, draft/publish controls.
+- **Creator discovery** — search, filtering, sorting, deterministic fit, and human-readable fit reasons.
+- **Creative briefs** — structured brand briefs with draft/open/closed/awarded lifecycle.
+- **Creator Copilot** — Groq-backed profile/portfolio guidance with non-invention rules, privacy safeguards, and explicit review-before-apply behavior.
+- **Applications pipeline** — creator proposals, creator tracking, brand applicant review, shortlist/reject/accept, and awarded brief state.
+- **Production polish** — responsive layouts, loading/empty/error states, route recovery, SPA refresh support, intended-route return after login, and demo/deployment documentation.
+
+## Stack
+
+- React 19 + TypeScript
+- Vite 8
+- Tailwind CSS 4
+- React Router 7
+- Supabase Auth, Postgres, RLS, Storage, Edge Functions
+- Groq API for Creator Copilot
+- Lucide React
+- npm with committed `package-lock.json`
+- Vercel-ready SPA configuration
+
+## Main routes
+
+| Route | Purpose |
+| --- | --- |
+| `/` | Marketplace landing page |
+| `/auth` | Sign in / create account |
+| `/dashboard/creator` | Creator studio overview |
+| `/creator/profile` | Edit creator profile |
+| `/creator/copilot` | AI Creator Copilot |
+| `/creator/portfolio` | Manage portfolio |
+| `/creator/portfolio/new` | Add case study |
+| `/creators/:id` | Public creator profile |
+| `/marketplace` | Creator discovery |
+| `/opportunities` | Creator brief opportunities |
+| `/creator/applications` | Creator application tracking |
+| `/dashboard/brand` | Brand workspace |
+| `/brand/briefs/new` | Create brief |
+| `/briefs/:id` | Brief detail |
+| `/briefs/:id/applications` | Apply to / review applications for a brief |
+
+## Local setup
+
+### 1. Install
+
+```bash
+npm ci
+```
+
+### 2. Frontend environment
+
+Copy `.env.example` to `.env.local` and provide only browser-safe Supabase credentials:
+
+```env
+VITE_SUPABASE_URL=https://YOUR_PROJECT.supabase.co
+VITE_SUPABASE_PUBLISHABLE_KEY=sb_publishable_...
+```
+
+Never put a Supabase secret/service-role key, database password, Groq key, or access token in a `VITE_*` variable.
+
+### 3. Database
+
+Apply the SQL migrations in `supabase/migrations/` in order. The current MVP includes migrations through:
 
 ```text
-src/
-├── components/
-│   ├── layout/
-│   │   ├── Navbar.tsx             # Responsive navigation with session & role display
-│   │   └── AppLayout.tsx          # Shared marketplace shell with header and footer
-│   ├── ui/
-│   │   ├── Button.tsx             # Accessible button with states, sizes & loading spinners
-│   │   ├── Input.tsx              # Form input with icon support, error & helper states
-│   │   └── LoadingState.tsx       # Reusable full-page and inline loading indicator
-│   └── auth/
-│       ├── LoginForm.tsx          # Email/password login with credential error handling
-│       ├── SignupForm.tsx         # Signup with display name, role picker & email confirm alert
-│       └── ProtectedRoute.tsx     # Route guard with session verification & schema retry UI
-├── context/
-│   └── AuthContext.tsx            # Supabase auth session, profile loading & state lifecycle
-├── hooks/
-│   └── useAuth.ts                 # React hook for consuming authentication state
-├── lib/
-│   └── supabase.ts                # Safe client initialization with environment variable check
-├── pages/
-│   ├── Home.tsx                   # Landing page detailing the 4 marketplace pillars
-│   ├── Auth.tsx                   # Unified sign-in and registration portal
-│   ├── AuthCallback.tsx           # PKCE and token callback exchange handler
-│   ├── DashboardCreator.tsx       # Creator dashboard shell with honest empty states
-│   ├── DashboardBrand.tsx         # Brand dashboard shell with honest empty states
-│   └── NotFound.tsx               # Informative 404 page with route directory
-├── styles/
-│   └── index.css                  # Tailwind CSS v4 setup and typography variables
-├── router.tsx                     # React Router configuration with protected dashboard entry
-├── App.tsx                        # Root application component
-└── main.tsx                       # React DOM entrypoint
+010_application_brief_visibility.sql
 ```
 
----
+The schema covers:
 
-## 🛠️ Local Development Setup
+- `user_profiles`
+- `creator_profiles`
+- `brand_profiles`
+- `portfolio_items`
+- `creative_briefs`
+- `applications`
 
-### 1. Prerequisites
-- **Node.js**: v18+ or v20+ (recommended v22+)
-- **npm**: v9+ (tested with v11)
+Row Level Security remains enabled and API grants are scoped through the migration set.
 
-### 2. Install Dependencies
+### 4. Creator Copilot
+
+Link the Supabase project, keep the Groq key server-side, and deploy the Edge Function:
+
 ```bash
-npm install
+npx supabase@latest link --project-ref YOUR_PROJECT_REF
+npx supabase@latest secrets set GROQ_API_KEY="YOUR_GROQ_API_KEY"
+npx supabase@latest secrets set GROQ_MODEL="openai/gpt-oss-120b"
+npx supabase@latest functions deploy creator-copilot --no-verify-jwt
 ```
 
-### 3. Configure Environment Variables
-Copy `.env.example` to `.env.local`:
-```bash
-cp .env.example .env.local
-```
+The function still performs its own authenticated-user and creator-role checks. See `STAGE5_COPILOT_SETUP.md` for details.
 
-Populate `.env.local` with your Supabase project API credentials:
-```env
-VITE_SUPABASE_URL=https://your-project-id.supabase.co
-VITE_SUPABASE_PUBLISHABLE_KEY=your-supabase-publishable-key-here
-```
+### 5. Run
 
-> **Security Note:** Never include service-role keys, database passwords, or AI API secret keys in frontend browser code or `.env.local`. Only use the publishable / anon client key.
-
-### 4. Configure Supabase Redirect URLs
-In your **Supabase Dashboard** > **Authentication** > **URL Configuration**:
-- **Site URL**: `http://localhost:5173`
-- **Redirect URLs (Allowed Callback URLs)**:
-  - `http://localhost:5173/auth/callback`
-  - `https://your-production-domain.vercel.app/auth/callback`
-
-### 5. Run Development Server
 ```bash
 npm run dev
 ```
-Open your browser to `http://localhost:5173`.
 
----
+### 6. Quality checks
 
-## 📜 Available NPM Scripts
-
-| Command | Description |
-| :--- | :--- |
-| `npm run dev` | Starts the Vite development server with Hot Module Replacement (HMR) |
-| `npm run build` | Runs TypeScript compilation check (`tsc -b`) and generates production bundle in `dist/` |
-| `npm run lint` | Runs code quality and lint analysis |
-| `npm run preview` | Serves the generated production build locally for verification |
-
----
-
-## 🤝 Multi-Developer Module Boundaries
-
-The project architecture has been specifically prepared so that team members can extend their features in parallel without merge conflicts:
-
-| Member | Feature Domain | Integration Entry Point |
-| :--- | :--- | :--- |
-| **Member 1** *(You)* | Frontend Foundation & Auth Integration | `src/` core structure, `AuthContext`, `router.tsx` |
-| **Member 2** | Creator Portfolios, Models & Applications | `src/pages/DashboardCreator.tsx` & portfolio components |
-| **Member 3** | Brand Creative Briefs & Creator Discovery | `src/pages/DashboardBrand.tsx` & brief/search components |
-| **Member 4** | Supabase Schema, Automated Triggers & RLS | `public.user_profiles` schema and DB functions |
-
----
-
-## 🔒 Exact Backend Contract Needed from Member 4
-
-The frontend code strictly respects the agreed database contract. Member 4 is responsible for creating and securing the following in Supabase:
-
-### 1. Table Schema: `public.user_profiles`
-```sql
-CREATE TABLE public.user_profiles (
-  id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
-  role TEXT NOT NULL CHECK (role IN ('creator', 'brand')),
-  display_name TEXT NOT NULL,
-  created_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc'::text, now()),
-  updated_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc'::text, now())
-);
+```bash
+npm run lint
+npm run build
 ```
 
-### 2. Automated Profile Provisioning Trigger
-When a user signs up via `supabase.auth.signUp()`, the frontend passes `display_name` and `role` inside `options.data`. Member 4 should attach a database trigger to `auth.users` to provision the profile automatically:
+## Supabase Auth redirect configuration
 
-```sql
-CREATE OR REPLACE FUNCTION public.handle_new_user()
-RETURNS TRIGGER AS $$
-BEGIN
-  INSERT INTO public.user_profiles (id, role, display_name)
-  VALUES (
-    NEW.id,
-    COALESCE(NEW.raw_user_meta_data->>'role', 'creator'),
-    COALESCE(NEW.raw_user_meta_data->>'display_name', split_part(NEW.email, '@', 1))
-  );
-  RETURN NEW;
-END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+In **Authentication → URL Configuration**, add the URLs you actually use, for example:
 
-CREATE TRIGGER on_auth_user_created
-  AFTER INSERT ON auth.users
-  FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
+```text
+http://localhost:5173/auth/callback
+http://localhost:5174/auth/callback
+http://localhost:5175/auth/callback
+https://YOUR_DEPLOYMENT.vercel.app/auth/callback
 ```
 
-### 3. Row Level Security (RLS) Policies
-```sql
-ALTER TABLE public.user_profiles ENABLE ROW LEVEL SECURITY;
+Set the production Site URL to the deployed frontend domain before the final demo.
 
--- Allow authenticated users to view profiles
-CREATE POLICY "Allow authenticated read of user profiles"
-  ON public.user_profiles
-  FOR SELECT
-  TO authenticated
-  USING (true);
+## Vercel deployment
 
--- Allow users to update their own profile
-CREATE POLICY "Allow users to update own profile"
-  ON public.user_profiles
-  FOR UPDATE
-  TO authenticated
-  USING (auth.uid() = id);
+The repository includes `vercel.json` so React Router paths resolve to `index.html` on refresh.
+
+Configure these Vercel environment variables:
+
+```text
+VITE_SUPABASE_URL
+VITE_SUPABASE_PUBLISHABLE_KEY
 ```
 
-> If `public.user_profiles` is not yet provisioned, the frontend gracefully detects this and displays a clear diagnostic card with a **"Retry Profile Check"** button and sign-out option.
+Do **not** configure `GROQ_API_KEY` in Vercel; it belongs in Supabase Edge Function secrets.
 
----
+Recommended production verification after deploy:
 
-## 🌐 Production SPA Deployment
-A `vercel.json` file is included in the project root:
-```json
-{
-  "rewrites": [
-    {
-      "source": "/(.*)",
-      "destination": "/index.html"
-    }
-  ]
-}
+```text
+/
+/auth
+/marketplace
+/dashboard/creator
+/creator/copilot
+/dashboard/brand
 ```
-This ensures nested paths like `/dashboard`, `/auth`, `/dashboard/creator`, and `/auth/callback` will not return 404 when refreshed in production.
+
+Refresh at least one nested protected route to confirm SPA fallback behavior.
+
+## Demo path
+
+For the cleanest hackathon demo, use two real accounts: one creator and one brand. Prepare enough real sample data to avoid empty screens.
+
+Suggested sequence:
+
+1. Creator public profile + workflow-backed portfolio case study.
+2. Brand creates/publishes a structured brief.
+3. Brand opens marketplace with brief criteria and explains deterministic fit reasons.
+4. Creator uses Copilot for a safe profile audit.
+5. Creator opens a live brief and submits a proposal.
+6. Brand reviews the applicant, shortlists, and accepts the creator.
+7. Creator shows the accepted application status.
+
+A timed script and final pre-demo checks are in `docs/demo-runbook.md`.
+
+## Marketplace principles
+
+GenixSpark intentionally avoids fake or opaque AI ranking claims.
+
+- Fit is based on explicit tools, skills, specialization, and brief criteria.
+- No criteria means no artificial match score.
+- Copilot must not invent skills, clients, outcomes, awards, metrics, or experience.
+- Proprietary prompts, keys, confidential client material, and unreleased assets should not be requested or exposed.
+- AI suggestions are reviewable; profile changes happen only after explicit creator approval.
+
+## Security notes
+
+- Use only publishable Supabase keys in the browser.
+- Keep Groq and backend secrets server-side.
+- RLS is the authorization boundary for user-owned marketplace data.
+- Do not disable RLS to make a demo work.
+- Do not commit `.env.local` or copied production secrets.
+
+## Useful documentation
+
+- `docs/backend-setup.md` — backend setup notes
+- `STAGE5_COPILOT_SETUP.md` — Creator Copilot deployment
+- `docs/demo-runbook.md` — final demo script and release checklist
