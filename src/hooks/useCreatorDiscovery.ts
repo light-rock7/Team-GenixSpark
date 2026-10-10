@@ -114,9 +114,15 @@ const recommendationSignal = (creator: DiscoveryCreator) => {
 
 const uniqueSorted = (values: string[]) => Array.from(new Set(values.filter(Boolean))).sort((a, b) => a.localeCompare(b));
 
-export const useCreatorDiscovery = () => {
+export const useCreatorDiscovery = (initialFilters?: Partial<DiscoveryFilters>) => {
   const [creators, setCreators] = useState<DiscoveryCreator[]>([]);
-  const [filters, setFilters] = useState<DiscoveryFilters>(EMPTY_DISCOVERY_FILTERS);
+  const [filters, setFilters] = useState<DiscoveryFilters>(() => ({
+    ...EMPTY_DISCOVERY_FILTERS,
+    ...initialFilters,
+    aiTools: initialFilters?.aiTools || [],
+    skills: initialFilters?.skills || [],
+    specializations: initialFilters?.specializations || [],
+  }));
   const [sort, setSort] = useState<DiscoverySort>('best_fit');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -169,7 +175,7 @@ export const useCreatorDiscovery = () => {
     });
   }, [creators, filters, sort, activeFilterCount]);
 
-  const resetFilters = useCallback(() => setFilters(EMPTY_DISCOVERY_FILTERS), []);
+  const resetFilters = useCallback(() => setFilters({ ...EMPTY_DISCOVERY_FILTERS, aiTools: [], skills: [], specializations: [] }), []);
 
   return {
     creators,
