@@ -4,7 +4,7 @@ import {
   CheckCircle2,
   ExternalLink,
   Globe2,
-  Instagram,
+  Link2,
   MapPin,
   Save,
   ShieldCheck,
@@ -359,7 +359,7 @@ export const CreatorProfileEdit: React.FC = () => {
                     value={form.social_url || ''}
                     onChange={(event) => setField('social_url', event.target.value)}
                     placeholder="https://instagram.com/yourhandle"
-                    leftIcon={<Instagram className="h-4 w-4" />}
+                    leftIcon={<Link2 className="h-4 w-4" />}
                   />
                 </div>
               </section>
