@@ -1,171 +1,116 @@
-import React, { useState } from 'react';
-import { Briefcase, FilePlus, Users, FileCheck2, AlertCircle, Plus, Search } from 'lucide-react';
+import React from 'react';
+import { BriefcaseBusiness, FilePlus2, Search, Sparkles } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { BriefCard } from '../components/briefs/BriefCard';
+import { getButtonClassName } from '../components/ui/Button';
+import { LoadingState } from '../components/ui/LoadingState';
 import { useAuth } from '../hooks/useAuth';
-import { Button } from '../components/ui/Button';
+import { useBrandBriefs } from '../hooks/useBrandBriefs';
+import type { BriefStatus, CreativeBrief } from '../types/brief';
 
 export const DashboardBrand: React.FC = () => {
-  const { user, profile } = useAuth();
-  const [activeTab, setActiveTab] = useState<'briefs' | 'proposals' | 'contracts'>('briefs');
+  const { profile } = useAuth();
+  const { briefs, stats, loading, error, refresh, setStatus, remove } = useBrandBriefs();
+
+  const handleStatus = (brief: CreativeBrief, status: BriefStatus) => {
+    void setStatus(brief.id, status).catch(() => undefined);
+  };
+
+  const handleDelete = (brief: CreativeBrief) => {
+    void remove(brief.id).catch(() => undefined);
+  };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
-      {/* Welcome & Identity Header */}
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 sm:p-8 mb-8">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+    <div className="min-h-full bg-[#f7f8fb]">
+      <section className="border-b border-slate-800 bg-[#0b1020] text-white">
+        <div className="page-shell py-10 sm:py-14">
+          <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_340px] lg:items-end">
+            <div>
+              <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.05] px-3 py-1.5 text-[10px] font-semibold text-violet-200">
+                <BriefcaseBusiness className="h-3.5 w-3.5" /> Brand workspace
+              </div>
+              <h1 className="mt-5 max-w-3xl text-4xl font-semibold tracking-[-0.045em] sm:text-5xl">
+                Define the work before searching for the talent.
+              </h1>
+              <p className="mt-4 max-w-2xl text-sm leading-6 text-slate-400 sm:text-base">
+                Welcome, {profile?.display_name || 'brand partner'}. Turn creative goals into structured briefs that creators can understand and the marketplace can match against.
+              </p>
+              <div className="mt-7 flex flex-wrap gap-3">
+                <Link to="/brand/briefs/new" className={getButtonClassName({ variant: 'secondary', size: 'md' })}>
+                  <FilePlus2 className="h-4 w-4" /> Create creative brief
+                </Link>
+                <Link to="/marketplace" className="inline-flex items-center gap-2 rounded-xl border border-white/15 bg-white/[0.04] px-4 py-2.5 text-xs font-semibold text-white hover:bg-white/[0.08]">
+                  <Search className="h-4 w-4" /> Discover creators
+                </Link>
+              </div>
+            </div>
+
+            <div className="rounded-[22px] border border-white/10 bg-white/[0.04] p-5">
+              <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-slate-500">Brief pipeline</p>
+              <div className="mt-5 grid grid-cols-3 gap-4">
+                <div><p className="text-2xl font-semibold tracking-[-0.04em]">{stats.open}</p><p className="mt-1 text-[9px] text-slate-500">Open</p></div>
+                <div><p className="text-2xl font-semibold tracking-[-0.04em]">{stats.drafts}</p><p className="mt-1 text-[9px] text-slate-500">Drafts</p></div>
+                <div><p className="text-2xl font-semibold tracking-[-0.04em]">{stats.closed}</p><p className="mt-1 text-[9px] text-slate-500">Closed</p></div>
+              </div>
+              <div className="mt-5 border-t border-white/10 pt-4 text-[10px] leading-5 text-slate-400">
+                Tools + skills + category become explicit matching signals for Stage 3 discovery.
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div className="page-shell py-8 sm:py-10">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <div className="flex items-center gap-2 mb-1.5">
-              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-slate-900 text-white">
-                <Briefcase className="w-3.5 h-3.5 text-violet-400" />
-                Brand / Agency Account
-              </span>
-            </div>
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
-              Welcome, {profile?.display_name || 'Brand Partner'}
-            </h1>
-            <p className="mt-1 text-sm text-slate-500">
-              Logged in as <span className="font-medium text-slate-700">{user?.email}</span>. Publish creative briefs, review creator proposals, and manage commissioned assets.
-            </p>
+            <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-violet-600">Creative briefs</p>
+            <h2 className="mt-2 text-2xl font-semibold tracking-[-0.035em] text-slate-950">Your project definitions</h2>
+            <p className="mt-1 text-xs leading-5 text-slate-500">Publish when requirements are ready; keep early ideas private as drafts.</p>
           </div>
+          <Link to="/brand/briefs/new" className={getButtonClassName({ variant: 'primary', size: 'sm' })}>
+            <FilePlus2 className="h-4 w-4" /> New brief
+          </Link>
         </div>
+
+        {error && (
+          <div className="mt-6 flex items-center justify-between gap-4 rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-xs text-rose-700">
+            <span>{error}</span>
+            <button type="button" onClick={() => void refresh()} className="font-semibold underline">Retry</button>
+          </div>
+        )}
+
+        {loading ? (
+          <div className="mt-6 surface-card rounded-[22px]"><LoadingState message="Loading brand briefs" description="Reading your structured project requirements." /></div>
+        ) : briefs.length > 0 ? (
+          <div className="mt-6 grid gap-5 xl:grid-cols-2">
+            {briefs.map((brief) => <BriefCard key={brief.id} brief={brief} editable onStatusChange={handleStatus} onDelete={handleDelete} />)}
+          </div>
+        ) : (
+          <div className="mt-6 rounded-[24px] border border-dashed border-slate-300 bg-white px-6 py-14 text-center">
+            <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-violet-50 text-violet-700"><Sparkles className="h-5 w-5" /></div>
+            <h3 className="mt-4 text-base font-semibold text-slate-950">Start with a structured brief</h3>
+            <p className="mx-auto mt-2 max-w-lg text-xs leading-5 text-slate-500">Define the outcome, deliverables, budget and required AI capabilities. GenixSpark can then carry those requirements into creator discovery.</p>
+            <div className="mt-5 flex flex-wrap justify-center gap-3">
+              <Link to="/brand/briefs/new" className={getButtonClassName({ variant: 'primary', size: 'sm' })}><FilePlus2 className="h-4 w-4" /> Create first brief</Link>
+              <Link to="/marketplace" className={getButtonClassName({ variant: 'outline', size: 'sm' })}><Search className="h-4 w-4" /> Browse creators</Link>
+            </div>
+          </div>
+        )}
+
+        <section className="mt-8 grid gap-4 md:grid-cols-3">
+          {[
+            ['01', 'Outcome first', 'Describe the commercial problem and deliverables before prescribing a model.'],
+            ['02', 'Capability signals', 'Use AI tools and skills only when they materially affect successful delivery.'],
+            ['03', 'Commercial clarity', 'Budget, deadline and usage rights help creators self-qualify before applying.'],
+          ].map(([number, title, copy]) => (
+            <div key={number} className="surface-card rounded-[18px] p-5">
+              <p className="text-[10px] font-bold text-violet-600">{number}</p>
+              <p className="mt-3 text-xs font-semibold text-slate-950">{title}</p>
+              <p className="mt-1.5 text-[10px] leading-5 text-slate-500">{copy}</p>
+            </div>
+          ))}
+        </section>
       </div>
-
-      {/* Navigation tabs for Brand modules */}
-      <div className="border-b border-slate-200 mb-6">
-        <nav className="flex space-x-8" aria-label="Tabs">
-          <button
-            type="button"
-            onClick={() => setActiveTab('briefs')}
-            className={`py-3 px-1 border-b-2 font-medium text-sm flex items-center gap-2 cursor-pointer transition-colors ${
-              activeTab === 'briefs'
-                ? 'border-violet-600 text-violet-700'
-                : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300'
-            }`}
-          >
-            <FilePlus className="w-4 h-4" />
-            <span>Creative Briefs</span>
-            <span className="ml-1 text-[11px] px-1.5 py-0.2 rounded-full bg-slate-100 text-slate-600 font-normal">
-              0
-            </span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => setActiveTab('proposals')}
-            className={`py-3 px-1 border-b-2 font-medium text-sm flex items-center gap-2 cursor-pointer transition-colors ${
-              activeTab === 'proposals'
-                ? 'border-violet-600 text-violet-700'
-                : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300'
-            }`}
-          >
-            <Users className="w-4 h-4" />
-            <span>Creator Proposals</span>
-            <span className="ml-1 text-[11px] px-1.5 py-0.2 rounded-full bg-slate-100 text-slate-600 font-normal">
-              0
-            </span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => setActiveTab('contracts')}
-            className={`py-3 px-1 border-b-2 font-medium text-sm flex items-center gap-2 cursor-pointer transition-colors ${
-              activeTab === 'contracts'
-                ? 'border-violet-600 text-violet-700'
-                : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300'
-            }`}
-          >
-            <FileCheck2 className="w-4 h-4" />
-            <span>Active Deliverables</span>
-            <span className="ml-1 text-[11px] px-1.5 py-0.2 rounded-full bg-slate-100 text-slate-600 font-normal">
-              0
-            </span>
-          </button>
-        </nav>
-      </div>
-
-      {/* Tab Panels with Genuine Empty States */}
-      {activeTab === 'briefs' && (
-        <div className="bg-white rounded-2xl border border-slate-200 p-12 text-center">
-          <div className="w-16 h-16 rounded-2xl bg-violet-50 text-violet-600 flex items-center justify-center mx-auto mb-4 border border-violet-100">
-            <FilePlus className="w-8 h-8" />
-          </div>
-          <h3 className="text-lg font-bold text-slate-900">
-            No Creative Briefs Posted Yet
-          </h3>
-          <p className="mt-2 text-sm text-slate-500 max-w-md mx-auto leading-relaxed">
-            Create structured creative briefs specifying style models, aspect ratios, target deliverables, and budgets to receive proposals from generative artists.
-          </p>
-          <div className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-3">
-            <Button
-              variant="secondary"
-              size="md"
-              disabled
-              leftIcon={<Plus className="w-4 h-4" />}
-            >
-              Post Creative Brief (Coming Soon)
-            </Button>
-            <Button
-              variant="outline"
-              size="md"
-              disabled
-              leftIcon={<Search className="w-4 h-4" />}
-            >
-              Discover Creators (Coming Soon)
-            </Button>
-          </div>
-        </div>
-      )}
-
-      {activeTab === 'proposals' && (
-        <div className="bg-white rounded-2xl border border-slate-200 p-12 text-center">
-          <div className="w-16 h-16 rounded-2xl bg-slate-100 text-slate-600 flex items-center justify-center mx-auto mb-4">
-            <Users className="w-8 h-8" />
-          </div>
-          <h3 className="text-lg font-bold text-slate-900">
-            No Creator Proposals Received
-          </h3>
-          <p className="mt-2 text-sm text-slate-500 max-w-md mx-auto leading-relaxed">
-            Once you post a creative brief, creator proposals and sample generation prompts will appear here for review.
-          </p>
-        </div>
-      )}
-
-      {activeTab === 'contracts' && (
-        <div className="bg-white rounded-2xl border border-slate-200 p-12 text-center">
-          <div className="w-16 h-16 rounded-2xl bg-slate-100 text-slate-600 flex items-center justify-center mx-auto mb-4">
-            <FileCheck2 className="w-8 h-8" />
-          </div>
-          <h3 className="text-lg font-bold text-slate-900">
-            No Active Deliverables
-          </h3>
-          <p className="mt-2 text-sm text-slate-500 max-w-md mx-auto leading-relaxed">
-            Commissioned creators, milestone deliverables, and asset approvals will be tracked here.
-          </p>
-        </div>
-      )}
-
-      {/* Account Verification & Technical Diagnostics (Dev Environment Only) */}
-      {import.meta.env.DEV && (
-        <div className="mt-10 p-6 rounded-2xl bg-slate-900 text-white">
-          <h4 className="text-xs font-mono font-bold flex items-center gap-2 text-violet-300">
-            <AlertCircle className="w-3.5 h-3.5" />
-            [DEV ONLY] Profile Session Diagnostics
-          </h4>
-          <div className="mt-3 grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
-            <div className="bg-slate-800/80 p-3 rounded-lg border border-slate-700">
-              <span className="text-slate-400 block mb-1">User ID:</span>
-              <span className="font-mono text-slate-200 break-all">{user?.id}</span>
-            </div>
-            <div className="bg-slate-800/80 p-3 rounded-lg border border-slate-700">
-              <span className="text-slate-400 block mb-1">Role:</span>
-              <span className="font-semibold text-violet-300 uppercase">{profile?.role}</span>
-            </div>
-            <div className="bg-slate-800/80 p-3 rounded-lg border border-slate-700">
-              <span className="text-slate-400 block mb-1">Profile Table:</span>
-              <span className="font-mono text-emerald-400">public.user_profiles</span>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };
