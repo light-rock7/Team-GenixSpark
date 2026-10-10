@@ -9,6 +9,7 @@ import { CreatorProfileEdit } from './pages/CreatorProfileEdit';
 import { CreatorPortfolio } from './pages/CreatorPortfolio';
 import { CreatorPortfolioNew } from './pages/CreatorPortfolioNew';
 import { CreatorPublicProfile } from './pages/CreatorPublicProfile';
+import { CreatorCopilot } from './pages/CreatorCopilot';
 import { Marketplace } from './pages/Marketplace';
 import { BrandBriefNew } from './pages/BrandBriefNew';
 import { BriefDetail } from './pages/BriefDetail';
@@ -53,6 +54,14 @@ export const router = createBrowserRouter([
         element: (
           <ProtectedRoute allowedRole="creator">
             <CreatorProfileEdit />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: 'creator/copilot',
+        element: (
+          <ProtectedRoute allowedRole="creator">
+            <CreatorCopilot />
           </ProtectedRoute>
         ),
       },
