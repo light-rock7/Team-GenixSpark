@@ -2,6 +2,7 @@ import React from 'react';
 import { Outlet } from 'react-router-dom';
 import { Sparkles } from 'lucide-react';
 import { Navbar } from './Navbar';
+import { ScrollToTop } from './ScrollToTop';
 
 interface AppLayoutProps {
   children?: React.ReactNode;
@@ -10,6 +11,7 @@ interface AppLayoutProps {
 export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
   return (
     <div className="min-h-screen bg-[#f7f8fb] text-slate-950">
+      <ScrollToTop />
       <Navbar />
 
       <main className="min-h-[calc(100vh-68px)]">
@@ -29,7 +31,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
               </div>
             </div>
             <p className="text-[10px] font-medium tracking-[0.04em] text-slate-400">
-              Creator portfolios · Creative briefs · Explainable matching
+              Creator portfolios · Creative briefs · Explainable matching · Application pipeline
             </p>
           </div>
         </div>
