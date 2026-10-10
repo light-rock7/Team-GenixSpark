@@ -1,6 +1,6 @@
 # Stage 5 — Creator Copilot setup
 
-The Creator Copilot frontend calls the authenticated Supabase Edge Function at `supabase/functions/creator-copilot/index.ts`. The OpenAI API key stays server-side and must **never** be added to a Vite `VITE_*` environment variable.
+The Creator Copilot frontend calls the authenticated Supabase Edge Function at `supabase/functions/creator-copilot/index.ts`. The Groq API key stays server-side and must **never** be added to a Vite `VITE_*` environment variable.
 
 ## 1. Keep the existing frontend environment
 
@@ -16,11 +16,13 @@ VITE_SUPABASE_PUBLISHABLE_KEY=YOUR_PUBLISHABLE_KEY
 Using the Supabase CLI after linking the project:
 
 ```bash
-supabase secrets set OPENAI_API_KEY=YOUR_OPENAI_API_KEY
-supabase secrets set OPENAI_MODEL=gpt-6-luna
+supabase secrets set GROQ_API_KEY=YOUR_GROQ_API_KEY
+supabase secrets set GROQ_MODEL=llama-3.3-70b-versatile
 ```
 
-`OPENAI_MODEL` is optional; the function defaults to `gpt-6-luna`.
+`GROQ_MODEL` is optional; the function defaults to `llama-3.3-70b-versatile`.
+
+Other Groq-supported model IDs can be used later without changing frontend code.
 
 ## 3. Deploy the function
 
@@ -42,7 +44,8 @@ The function verifies the signed-in Supabase user and only serves accounts whose
 
 ## Security notes
 
-- Never commit `OPENAI_API_KEY`.
-- Never expose an OpenAI key in `.env.local` under a `VITE_*` variable.
+- Never commit `GROQ_API_KEY`.
+- Never expose a Groq key in `.env.local` under a `VITE_*` variable.
 - Copilot suggestions are not automatically treated as verified facts.
 - The function is instructed not to invent clients, results, tools, skills, awards, years of experience, or portfolio evidence.
+- Provider calls are made server-side from the Supabase Edge Function to Groq's OpenAI-compatible API.
