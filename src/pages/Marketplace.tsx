@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { RefreshCw, Search, SlidersHorizontal, Sparkles, Users } from 'lucide-react';
+import { useSearchParams } from 'react-router-dom';
 import { CreatorDiscoveryCard } from '../components/discovery/CreatorDiscoveryCard';
 import { DiscoveryFiltersPanel } from '../components/discovery/DiscoveryFiltersPanel';
 import { LoadingState } from '../components/ui/LoadingState';
@@ -7,6 +8,14 @@ import { useCreatorDiscovery } from '../hooks/useCreatorDiscovery';
 import type { DiscoverySort } from '../types/discovery';
 
 export const Marketplace: React.FC = () => {
+  const [searchParams] = useSearchParams();
+  const initialFilters = useMemo(() => ({
+    aiTools: searchParams.getAll('tool'),
+    skills: searchParams.getAll('skill'),
+    specializations: searchParams.getAll('specialization'),
+  }), [searchParams]);
+  const briefContext = searchParams.get('brief');
+
   const {
     creators,
     results,
@@ -20,7 +29,7 @@ export const Marketplace: React.FC = () => {
     error,
     refresh,
     resetFilters,
-  } = useCreatorDiscovery();
+  } = useCreatorDiscovery(initialFilters);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
   return (
@@ -57,6 +66,13 @@ export const Marketplace: React.FC = () => {
       </section>
 
       <div className="page-shell py-8 sm:py-10">
+        {briefContext && (
+          <div className="mb-5 flex items-start gap-3 rounded-[18px] border border-violet-200 bg-violet-50 px-4 py-3.5 text-xs text-violet-800">
+            <Sparkles className="mt-0.5 h-4 w-4 shrink-0" />
+            <div><p className="font-semibold">Brief requirements applied to discovery</p><p className="mt-1 text-[10px] leading-5 text-violet-600">Required tools, skills and category from the creative brief are now explicit filters. Fit scores explain overlap with those requirements.</p></div>
+          </div>
+        )}
+
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
           <label className="relative flex-1">
             <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
