@@ -1,0 +1,5 @@
+-- GenixSpark seed helper.
+-- Intentionally does NOT create fake auth.users records.
+-- Create real demo Creator and Brand accounts through the application first.
+-- Then use the UI to populate creator profiles, portfolio items, briefs and applications.
+-- This keeps demo data consistent with Supabase Auth and Row Level Security.
