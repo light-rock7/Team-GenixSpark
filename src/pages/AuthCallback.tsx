@@ -12,10 +12,21 @@ export const AuthCallback: React.FC = () => {
 
   // Guards against duplicate code exchanges in React 19 / StrictMode
   const exchangeAttemptedRef = useRef<boolean>(false);
+  const succeededRef = useRef<boolean>(false);
   const timerRef = useRef<number | null>(null);
 
   useEffect(() => {
     let isMounted = true;
+    let authSubscription: { subscription: { unsubscribe: () => void } } | null = null;
+
+    const scheduleRedirect = (delayMs = 1000) => {
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+      }
+      timerRef.current = window.setTimeout(() => {
+        navigate('/dashboard', { replace: true });
+      }, delayMs);
+    };
 
     const parseErrorFromUrl = (): string | null => {
       // 1. Check query parameters
@@ -69,21 +80,20 @@ export const AuthCallback: React.FC = () => {
           try {
             const { error } = await supabase.auth.exchangeCodeForSession(code);
             if (error) {
-              if (isMounted) {
+              if (isMounted && !succeededRef.current) {
                 setStatus('error');
                 setErrorMessage(error.message);
               }
               return;
             }
 
+            succeededRef.current = true;
             if (isMounted) {
               setStatus('success');
-              timerRef.current = window.setTimeout(() => {
-                navigate('/dashboard', { replace: true });
-              }, 1000);
+              scheduleRedirect(1000);
             }
           } catch (err: unknown) {
-            if (isMounted) {
+            if (isMounted && !succeededRef.current) {
               setStatus('error');
               setErrorMessage(err instanceof Error ? err.message : 'Failed to complete code exchange.');
             }
@@ -96,7 +106,7 @@ export const AuthCallback: React.FC = () => {
       try {
         const { data: { session }, error } = await supabase.auth.getSession();
         if (error) {
-          if (isMounted) {
+          if (isMounted && !succeededRef.current) {
             setStatus('error');
             setErrorMessage(error.message);
           }
@@ -104,11 +114,10 @@ export const AuthCallback: React.FC = () => {
         }
 
         if (session) {
+          succeededRef.current = true;
           if (isMounted) {
             setStatus('success');
-            timerRef.current = window.setTimeout(() => {
-              navigate('/dashboard', { replace: true });
-            }, 800);
+            scheduleRedirect(800);
           }
           return;
         }
@@ -116,31 +125,37 @@ export const AuthCallback: React.FC = () => {
         // Wait briefly for client URL detection if hash is present
         if (window.location.hash.includes('access_token')) {
           const { data: authSub } = supabase.auth.onAuthStateChange((_event, newSession) => {
-            if (newSession && isMounted) {
+            if (newSession && isMounted && !succeededRef.current) {
+              succeededRef.current = true;
               setStatus('success');
-              authSub.subscription.unsubscribe();
-              timerRef.current = window.setTimeout(() => {
-                navigate('/dashboard', { replace: true });
-              }, 800);
+              if (authSubscription) {
+                authSubscription.subscription.unsubscribe();
+                authSubscription = null;
+              }
+              scheduleRedirect(800);
             }
           });
+          authSubscription = authSub;
 
           // Timeout if no session appears
           timerRef.current = window.setTimeout(() => {
-            authSub.subscription.unsubscribe();
-            if (isMounted && status !== 'success') {
+            if (authSubscription) {
+              authSubscription.subscription.unsubscribe();
+              authSubscription = null;
+            }
+            if (isMounted && !succeededRef.current) {
               setStatus('error');
               setErrorMessage('Session establishment timed out. Please try signing in again.');
             }
           }, 4000);
         } else {
-          if (isMounted) {
+          if (isMounted && !succeededRef.current) {
             setStatus('error');
             setErrorMessage('No authentication credentials found in the callback request.');
           }
         }
       } catch (err: unknown) {
-        if (isMounted) {
+        if (isMounted && !succeededRef.current) {
           setStatus('error');
           setErrorMessage(err instanceof Error ? err.message : 'Unexpected authentication error.');
         }
@@ -155,8 +170,12 @@ export const AuthCallback: React.FC = () => {
         clearTimeout(timerRef.current);
         timerRef.current = null;
       }
+      if (authSubscription) {
+        authSubscription.subscription.unsubscribe();
+        authSubscription = null;
+      }
     };
-  }, [navigate, status]);
+  }, [navigate]);
 
   if (status === 'verifying') {
     return (
