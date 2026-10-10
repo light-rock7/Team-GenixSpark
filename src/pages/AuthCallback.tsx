@@ -1,21 +1,46 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate, useSearchParams, Link } from 'react-router-dom';
+import React, { useEffect, useRef, useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
 import { CheckCircle2, AlertCircle, ArrowRight } from 'lucide-react';
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
 import { LoadingState } from '../components/ui/LoadingState';
-import { Button } from '../components/ui/Button';
+import { getButtonClassName } from '../components/ui/Button';
 
 export const AuthCallback: React.FC = () => {
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
   const [status, setStatus] = useState<'verifying' | 'success' | 'error'>('verifying');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  // Guards against duplicate code exchanges in React 19 / StrictMode
+  const exchangeAttemptedRef = useRef<boolean>(false);
+  const timerRef = useRef<number | null>(null);
 
   useEffect(() => {
     let isMounted = true;
 
+    const parseErrorFromUrl = (): string | null => {
+      // 1. Check query parameters
+      const searchParams = new URLSearchParams(window.location.search);
+      const searchErr = searchParams.get('error_description') || searchParams.get('error');
+      if (searchErr) {
+        return decodeURIComponent(searchErr);
+      }
+
+      // 2. Check hash fragment
+      if (window.location.hash) {
+        const hashStr = window.location.hash.startsWith('#')
+          ? window.location.hash.substring(1)
+          : window.location.hash;
+        const hashParams = new URLSearchParams(hashStr);
+        const hashErr = hashParams.get('error_description') || hashParams.get('error');
+        if (hashErr) {
+          return decodeURIComponent(hashErr);
+        }
+      }
+
+      return null;
+    };
+
     const handleCallback = async () => {
-      // 1. Check configuration
       if (!isSupabaseConfigured || !supabase) {
         if (isMounted) {
           setStatus('error');
@@ -24,38 +49,50 @@ export const AuthCallback: React.FC = () => {
         return;
       }
 
-      // 2. Check for explicit error query parameters from Supabase
-      const urlError = searchParams.get('error_description') || searchParams.get('error');
+      // Check query/hash error responses
+      const urlError = parseErrorFromUrl();
       if (urlError) {
         if (isMounted) {
           setStatus('error');
-          setErrorMessage(decodeURIComponent(urlError));
+          setErrorMessage(urlError);
         }
         return;
       }
 
-      // 3. Check for PKCE auth code
+      const searchParams = new URLSearchParams(window.location.search);
       const code = searchParams.get('code');
+
+      // PKCE auth code exchange
       if (code) {
-        try {
-          const { error } = await supabase.auth.exchangeCodeForSession(code);
-          if (error) {
+        if (!exchangeAttemptedRef.current) {
+          exchangeAttemptedRef.current = true;
+          try {
+            const { error } = await supabase.auth.exchangeCodeForSession(code);
+            if (error) {
+              if (isMounted) {
+                setStatus('error');
+                setErrorMessage(error.message);
+              }
+              return;
+            }
+
+            if (isMounted) {
+              setStatus('success');
+              timerRef.current = window.setTimeout(() => {
+                navigate('/dashboard', { replace: true });
+              }, 1000);
+            }
+          } catch (err: unknown) {
             if (isMounted) {
               setStatus('error');
-              setErrorMessage(error.message);
+              setErrorMessage(err instanceof Error ? err.message : 'Failed to complete code exchange.');
             }
-            return;
           }
-        } catch (err: unknown) {
-          if (isMounted) {
-            setStatus('error');
-            setErrorMessage(err instanceof Error ? err.message : 'Failed to exchange authentication code.');
-          }
-          return;
         }
+        return;
       }
 
-      // 4. Verify that session is active
+      // Non-PKCE session detection (e.g. hash fragments parsed by supabase client)
       try {
         const { data: { session }, error } = await supabase.auth.getSession();
         if (error) {
@@ -69,31 +106,37 @@ export const AuthCallback: React.FC = () => {
         if (session) {
           if (isMounted) {
             setStatus('success');
-            // Brief success state before navigating to dashboard
-            setTimeout(() => {
+            timerRef.current = window.setTimeout(() => {
               navigate('/dashboard', { replace: true });
-            }, 1200);
+            }, 800);
           }
-        } else {
-          // Check hash parameters if implicit flow was used
-          if (window.location.hash.includes('access_token')) {
-            // Supabase client auto-parses hashes; give it a brief moment
-            setTimeout(async () => {
-              if (!supabase) return;
-              const { data: { session: hashSession } } = await supabase.auth.getSession();
-              if (hashSession && isMounted) {
-                setStatus('success');
-                setTimeout(() => navigate('/dashboard', { replace: true }), 1000);
-              } else if (isMounted) {
-                setStatus('error');
-                setErrorMessage('Unable to establish an authenticated session from token.');
-              }
-            }, 600);
-          } else {
-            if (isMounted) {
-              setStatus('error');
-              setErrorMessage('No authentication credentials found in the callback request.');
+          return;
+        }
+
+        // Wait briefly for client URL detection if hash is present
+        if (window.location.hash.includes('access_token')) {
+          const { data: authSub } = supabase.auth.onAuthStateChange((_event, newSession) => {
+            if (newSession && isMounted) {
+              setStatus('success');
+              authSub.subscription.unsubscribe();
+              timerRef.current = window.setTimeout(() => {
+                navigate('/dashboard', { replace: true });
+              }, 800);
             }
+          });
+
+          // Timeout if no session appears
+          timerRef.current = window.setTimeout(() => {
+            authSub.subscription.unsubscribe();
+            if (isMounted && status !== 'success') {
+              setStatus('error');
+              setErrorMessage('Session establishment timed out. Please try signing in again.');
+            }
+          }, 4000);
+        } else {
+          if (isMounted) {
+            setStatus('error');
+            setErrorMessage('No authentication credentials found in the callback request.');
           }
         }
       } catch (err: unknown) {
@@ -108,15 +151,19 @@ export const AuthCallback: React.FC = () => {
 
     return () => {
       isMounted = false;
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+        timerRef.current = null;
+      }
     };
-  }, [navigate, searchParams]);
+  }, [navigate, status]);
 
   if (status === 'verifying') {
     return (
       <LoadingState
         fullPage
         message="Verifying Authentication..."
-        description="Completing session handshake with Supabase. You will be redirected shortly."
+        description="Completing session handshake. You will be redirected shortly."
       />
     );
   }
@@ -152,15 +199,20 @@ export const AuthCallback: React.FC = () => {
           {errorMessage || 'An error occurred while confirming your credentials.'}
         </p>
         <div className="mt-6 pt-4 border-t border-slate-100 flex flex-col gap-2">
-          <Link to="/auth">
-            <Button variant="primary" fullWidth rightIcon={<ArrowRight className="w-4 h-4" />}>
+          <Link
+            to="/auth"
+            className={getButtonClassName({ variant: 'primary', size: 'md', fullWidth: true })}
+          >
+            <span className="flex items-center justify-center gap-2">
               Return to Sign In
-            </Button>
+              <ArrowRight className="w-4 h-4" />
+            </span>
           </Link>
-          <Link to="/">
-            <Button variant="ghost" fullWidth>
-              Go to Home Page
-            </Button>
+          <Link
+            to="/"
+            className={getButtonClassName({ variant: 'ghost', size: 'md', fullWidth: true })}
+          >
+            Go to Home Page
           </Link>
         </div>
       </div>

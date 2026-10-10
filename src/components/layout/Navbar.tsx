@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Sparkles, LogOut, LayoutDashboard, Menu, X, ShieldAlert } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
-import { Button } from '../ui/Button';
+import { Button, getButtonClassName } from '../ui/Button';
 
 export const Navbar: React.FC = () => {
   const navigate = useNavigate();
@@ -10,7 +10,10 @@ export const Navbar: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const handleLogout = async () => {
-    await logout();
+    const { error } = await logout();
+    if (error) {
+      console.error('Failed to sign out:', error.message);
+    }
     navigate('/');
     setMobileMenuOpen(false);
   };
@@ -69,28 +72,26 @@ export const Navbar: React.FC = () => {
 
           {/* Right Action / Auth Buttons */}
           <div className="hidden md:flex items-center gap-3">
-            {!isConfigured && (
+            {!isConfigured && import.meta.env.DEV && (
               <span className="inline-flex items-center gap-1 text-[11px] font-medium text-amber-700 bg-amber-50 px-2.5 py-1 rounded-full border border-amber-200">
                 <ShieldAlert className="w-3.5 h-3.5" />
-                Supabase Unconfigured
+                Auth Dev Mode
               </span>
             )}
 
             {user ? (
               <div className="flex items-center gap-3">
-                <Link to="/dashboard">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    leftIcon={<LayoutDashboard className="w-4 h-4 text-violet-600" />}
-                  >
-                    <span>Dashboard</span>
-                    {profile?.role && (
-                      <span className="ml-1.5 text-[10px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded bg-violet-100 text-violet-800">
-                        {profile.role}
-                      </span>
-                    )}
-                  </Button>
+                <Link
+                  to="/dashboard"
+                  className={getButtonClassName({ variant: 'outline', size: 'sm' })}
+                >
+                  <LayoutDashboard className="w-4 h-4 text-violet-600 mr-1.5" />
+                  <span>Dashboard</span>
+                  {profile?.role && (
+                    <span className="ml-1.5 text-[10px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded bg-violet-100 text-violet-800">
+                      {profile.role}
+                    </span>
+                  )}
                 </Link>
 
                 <div className="h-6 w-px bg-slate-200" />
@@ -116,15 +117,17 @@ export const Navbar: React.FC = () => {
               </div>
             ) : (
               <div className="flex items-center gap-2">
-                <Link to="/auth">
-                  <Button variant="ghost" size="sm">
-                    Sign In
-                  </Button>
+                <Link
+                  to="/auth"
+                  className={getButtonClassName({ variant: 'ghost', size: 'sm' })}
+                >
+                  Sign In
                 </Link>
-                <Link to="/auth">
-                  <Button variant="primary" size="sm">
-                    Get Started
-                  </Button>
+                <Link
+                  to="/auth?mode=signup"
+                  className={getButtonClassName({ variant: 'primary', size: 'sm' })}
+                >
+                  Get Started
                 </Link>
               </div>
             )}
@@ -135,7 +138,7 @@ export const Navbar: React.FC = () => {
             <button
               type="button"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 rounded-lg text-slate-600 hover:bg-slate-100"
+              className="p-2 rounded-lg text-slate-600 hover:bg-slate-100 cursor-pointer"
               aria-label="Toggle navigation menu"
             >
               {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -169,10 +172,10 @@ export const Navbar: React.FC = () => {
             Workflow Transparency
           </a>
 
-          {!isConfigured && (
+          {!isConfigured && import.meta.env.DEV && (
             <div className="p-2 rounded-lg bg-amber-50 text-amber-800 text-xs flex items-center gap-2">
               <ShieldAlert className="w-4 h-4" />
-              <span>Supabase environment unconfigured</span>
+              <span>Auth Dev Mode (Unconfigured)</span>
             </div>
           )}
 
@@ -187,10 +190,13 @@ export const Navbar: React.FC = () => {
                     Role: <span className="font-bold text-violet-600 uppercase">{profile?.role || 'Pending'}</span>
                   </p>
                 </div>
-                <Link to="/dashboard" onClick={() => setMobileMenuOpen(false)}>
-                  <Button variant="outline" size="sm" fullWidth leftIcon={<LayoutDashboard className="w-4 h-4" />}>
-                    Go to Dashboard
-                  </Button>
+                <Link
+                  to="/dashboard"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={getButtonClassName({ variant: 'outline', size: 'sm', fullWidth: true })}
+                >
+                  <LayoutDashboard className="w-4 h-4 mr-1.5" />
+                  Go to Dashboard
                 </Link>
                 <Button
                   variant="ghost"
@@ -205,15 +211,19 @@ export const Navbar: React.FC = () => {
               </div>
             ) : (
               <div className="flex flex-col gap-2">
-                <Link to="/auth" onClick={() => setMobileMenuOpen(false)}>
-                  <Button variant="outline" size="sm" fullWidth>
-                    Sign In
-                  </Button>
+                <Link
+                  to="/auth"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={getButtonClassName({ variant: 'outline', size: 'sm', fullWidth: true })}
+                >
+                  Sign In
                 </Link>
-                <Link to="/auth" onClick={() => setMobileMenuOpen(false)}>
-                  <Button variant="primary" size="sm" fullWidth>
-                    Get Started
-                  </Button>
+                <Link
+                  to="/auth?mode=signup"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={getButtonClassName({ variant: 'primary', size: 'sm', fullWidth: true })}
+                >
+                  Get Started
                 </Link>
               </div>
             )}

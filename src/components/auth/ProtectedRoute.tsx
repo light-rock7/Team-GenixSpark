@@ -34,7 +34,7 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
       <LoadingState
         fullPage
         message="Restoring session..."
-        description="Verifying authentication tokens with Supabase"
+        description="Verifying authentication tokens"
       />
     );
   }
@@ -50,13 +50,20 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
       <LoadingState
         fullPage
         message="Loading user profile..."
-        description="Querying public.user_profiles for account role and authorization"
+        description="Querying user profile role and permissions"
       />
     );
   }
 
   // 4. Missing profile or unavailable database schema
   if (profileError || !profile) {
+    const handleSignOut = async () => {
+      const { error } = await logout();
+      if (error) {
+        console.error('Error signing out:', error.message);
+      }
+    };
+
     return (
       <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
         <div className="max-w-lg w-full bg-white rounded-2xl border border-slate-200 shadow-xl p-6 sm:p-8">
@@ -65,28 +72,31 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
           </div>
 
           <h2 className="text-xl font-bold text-slate-900">
-            Database Profile Pending
+            Account Profile Pending
           </h2>
 
           <p className="mt-2 text-sm text-slate-600 leading-relaxed">
-            Authenticated as <span className="font-semibold text-slate-800">{user.email}</span>, but the associated profile could not be loaded from <code className="bg-slate-100 text-slate-800 px-1.5 py-0.5 rounded font-mono text-xs">public.user_profiles</code>.
+            Authenticated as <span className="font-semibold text-slate-800">{user.email}</span>, but the profile record could not be loaded.
           </p>
 
-          <div className="mt-4 p-3.5 bg-slate-50 border border-slate-200 rounded-lg text-xs font-mono text-slate-700 space-y-1">
-            <div className="flex items-center gap-1.5 font-semibold text-slate-800">
-              <AlertTriangle className="w-3.5 h-3.5 text-amber-500" />
-              <span>Contract Requirement (Member 4):</span>
-            </div>
-            <div className="text-slate-600 pl-5">
-              • Table: <span className="text-violet-600">public.user_profiles</span><br />
-              • Columns: <span className="text-violet-600">id</span> (UUID, PK), <span className="text-violet-600">role</span> (&apos;creator&apos; | &apos;brand&apos;), <span className="text-violet-600">display_name</span> (TEXT)
-            </div>
-            {profileError && (
-              <div className="mt-2 pt-2 border-t border-slate-200 text-rose-600">
-                Detail: {profileError}
+          {/* Detailed technical diagnostics shown strictly in development */}
+          {import.meta.env.DEV && (
+            <div className="mt-4 p-3.5 bg-slate-50 border border-slate-200 rounded-lg text-xs font-mono text-slate-700 space-y-1">
+              <div className="flex items-center gap-1.5 font-semibold text-slate-800">
+                <AlertTriangle className="w-3.5 h-3.5 text-amber-500" />
+                <span>[DEV] Schema Contract Diagnostics:</span>
               </div>
-            )}
-          </div>
+              <div className="text-slate-600 pl-5">
+                • Target Table: <span className="text-violet-600">public.user_profiles</span><br />
+                • Columns: <span className="text-violet-600">id</span> (UUID, PK), <span className="text-violet-600">role</span> (&apos;creator&apos; | &apos;brand&apos;), <span className="text-violet-600">display_name</span> (TEXT)
+              </div>
+              {profileError && (
+                <div className="mt-2 pt-2 border-t border-slate-200 text-rose-600">
+                  Detail: {profileError}
+                </div>
+              )}
+            </div>
+          )}
 
           <div className="mt-6 flex flex-col sm:flex-row items-center gap-3">
             <Button
@@ -102,7 +112,7 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
               variant="outline"
               size="md"
               fullWidth
-              onClick={() => logout()}
+              onClick={handleSignOut}
               leftIcon={<LogOut className="w-4 h-4" />}
             >
               Sign Out

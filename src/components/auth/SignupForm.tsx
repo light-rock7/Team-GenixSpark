@@ -28,7 +28,11 @@ export const SignupForm: React.FC<SignupFormProps> = ({ onToggleMode }) => {
     setErrorMessage(null);
 
     if (!isConfigured) {
-      setErrorMessage('Supabase is not configured. Add VITE_SUPABASE_URL and VITE_SUPABASE_PUBLISHABLE_KEY to your .env.local file.');
+      setErrorMessage(
+        import.meta.env.DEV
+          ? 'Supabase is not configured. Add VITE_SUPABASE_URL and VITE_SUPABASE_PUBLISHABLE_KEY to your .env.local file.'
+          : 'Registration service is currently unavailable. Please try again later.'
+      );
       return;
     }
 
@@ -53,29 +57,33 @@ export const SignupForm: React.FC<SignupFormProps> = ({ onToggleMode }) => {
     }
 
     setIsSubmitting(true);
-    const { data, error, requiresEmailConfirmation } = await signup(
-      email.trim(),
-      password,
-      displayName.trim(),
-      role
-    );
-    setIsSubmitting(false);
+    try {
+      const { data, error, requiresEmailConfirmation } = await signup(
+        email.trim(),
+        password,
+        displayName.trim(),
+        role
+      );
 
-    if (error) {
-      setErrorMessage(error.message);
-      return;
-    }
+      if (error) {
+        setErrorMessage(error.message);
+        return;
+      }
 
-    // Handle email confirmation requirement:
-    // Do not navigate to a logged-in dashboard if signup requires confirmation and no session exists.
-    if (requiresEmailConfirmation) {
-      setConfirmationNotice({ email: email.trim() });
-      return;
-    }
+      // Do not navigate to a logged-in dashboard if signup requires confirmation and no session exists
+      if (requiresEmailConfirmation) {
+        setConfirmationNotice({ email: email.trim() });
+        return;
+      }
 
-    // If an active session was immediately granted (e.g., auto-confirm is enabled in Supabase)
-    if (data?.session) {
-      navigate('/dashboard');
+      if (data?.session) {
+        navigate('/dashboard');
+      }
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'An unexpected error occurred during registration.';
+      setErrorMessage(msg);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -113,11 +121,15 @@ export const SignupForm: React.FC<SignupFormProps> = ({ onToggleMode }) => {
         <div className="mb-6 p-4 rounded-xl bg-amber-50 border border-amber-200 text-amber-900 text-sm flex items-start gap-3">
           <AlertCircle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
           <div>
-            <p className="font-semibold">Supabase Environment Unconfigured</p>
+            <p className="font-semibold">Registration Unavailable</p>
             <p className="mt-1 text-xs text-amber-800 leading-relaxed">
-              Authentication is disabled because backend Supabase environment variables are missing.
-              Copy <code className="bg-amber-100 px-1 py-0.5 rounded font-mono">.env.example</code> to <code className="bg-amber-100 px-1 py-0.5 rounded font-mono">.env.local</code> and populate credentials.
+              Account registration services are currently disabled.
             </p>
+            {import.meta.env.DEV && (
+              <p className="mt-2 text-[11px] text-amber-700 bg-amber-100/70 p-2 rounded font-mono leading-normal">
+                [DEV] Copy <code>.env.example</code> to <code>.env.local</code> and set <code>VITE_SUPABASE_URL</code> and <code>VITE_SUPABASE_PUBLISHABLE_KEY</code>.
+              </p>
+            )}
           </div>
         </div>
       )}
@@ -153,7 +165,7 @@ export const SignupForm: React.FC<SignupFormProps> = ({ onToggleMode }) => {
                 </span>
               </div>
               <p className="text-[11px] text-slate-500 line-clamp-2">
-                Publish AI assets, showcase prompts, and monetize projects.
+                Publish style portfolios, share prompt workflows, and apply to briefs.
               </p>
             </button>
 
@@ -174,7 +186,7 @@ export const SignupForm: React.FC<SignupFormProps> = ({ onToggleMode }) => {
                 </span>
               </div>
               <p className="text-[11px] text-slate-500 line-clamp-2">
-                Post creative briefs, hire vetted talent, manage workflows.
+                Post creative briefs, discover creator portfolios, collaborate on assets.
               </p>
             </button>
           </div>

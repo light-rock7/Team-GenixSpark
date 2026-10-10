@@ -1,7 +1,7 @@
 import React from 'react';
 import { useLocation, Link } from 'react-router-dom';
 import { Compass, Home as HomeIcon, LayoutDashboard, ArrowLeft } from 'lucide-react';
-import { Button } from '../components/ui/Button';
+import { getButtonClassName } from '../components/ui/Button';
 
 export const NotFound: React.FC = () => {
   const location = useLocation();
@@ -34,15 +34,19 @@ export const NotFound: React.FC = () => {
         </div>
 
         <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
-          <Link to="/">
-            <Button variant="primary" size="md" leftIcon={<HomeIcon className="w-4 h-4" />}>
-              Back to Home
-            </Button>
+          <Link
+            to="/"
+            className={getButtonClassName({ variant: 'primary', size: 'md' })}
+          >
+            <HomeIcon className="w-4 h-4 mr-1.5" />
+            Back to Home
           </Link>
-          <Link to="/dashboard">
-            <Button variant="outline" size="md" leftIcon={<LayoutDashboard className="w-4 h-4" />}>
-              Open Dashboard
-            </Button>
+          <Link
+            to="/dashboard"
+            className={getButtonClassName({ variant: 'outline', size: 'md' })}
+          >
+            <LayoutDashboard className="w-4 h-4 mr-1.5" />
+            Open Dashboard
           </Link>
           <button
             type="button"

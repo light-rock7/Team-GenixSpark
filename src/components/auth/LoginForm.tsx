@@ -23,7 +23,11 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onToggleMode }) => {
     setErrorMessage(null);
 
     if (!isConfigured) {
-      setErrorMessage('Supabase is not configured. Add VITE_SUPABASE_URL and VITE_SUPABASE_PUBLISHABLE_KEY to your .env.local file.');
+      setErrorMessage(
+        import.meta.env.DEV
+          ? 'Supabase is not configured. Add VITE_SUPABASE_URL and VITE_SUPABASE_PUBLISHABLE_KEY to your .env.local file.'
+          : 'Authentication service is currently unavailable. Please try again later.'
+      );
       return;
     }
 
@@ -33,20 +37,26 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onToggleMode }) => {
     }
 
     setIsSubmitting(true);
-    const { error } = await login(email.trim(), password);
-    setIsSubmitting(false);
+    try {
+      const { error } = await login(email.trim(), password);
 
-    if (error) {
-      if (error.message.toLowerCase().includes('invalid login credentials')) {
-        setErrorMessage('Invalid email or password. Please verify your credentials and try again.');
-      } else {
-        setErrorMessage(error.message);
+      if (error) {
+        if (error.message.toLowerCase().includes('invalid login credentials')) {
+          setErrorMessage('Invalid email or password. Please verify your credentials and try again.');
+        } else {
+          setErrorMessage(error.message);
+        }
+        return;
       }
-      return;
-    }
 
-    // Success: navigate to protected dashboard entry
-    navigate('/dashboard');
+      // Success: navigate to protected dashboard entry
+      navigate('/dashboard');
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'An unexpected error occurred during login.';
+      setErrorMessage(msg);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -55,11 +65,15 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onToggleMode }) => {
         <div className="mb-6 p-4 rounded-xl bg-amber-50 border border-amber-200 text-amber-900 text-sm flex items-start gap-3">
           <AlertCircle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
           <div>
-            <p className="font-semibold">Supabase Environment Unconfigured</p>
+            <p className="font-semibold">Authentication Unavailable</p>
             <p className="mt-1 text-xs text-amber-800 leading-relaxed">
-              Authentication is currently disabled because backend Supabase environment variables are missing.
-              Copy <code className="bg-amber-100 px-1 py-0.5 rounded font-mono">.env.example</code> to <code className="bg-amber-100 px-1 py-0.5 rounded font-mono">.env.local</code> and populate credentials.
+              Authentication services are currently disabled.
             </p>
+            {import.meta.env.DEV && (
+              <p className="mt-2 text-[11px] text-amber-700 bg-amber-100/70 p-2 rounded font-mono leading-normal">
+                [DEV] Copy <code>.env.example</code> to <code>.env.local</code> and set <code>VITE_SUPABASE_URL</code> and <code>VITE_SUPABASE_PUBLISHABLE_KEY</code>.
+              </p>
+            )}
           </div>
         </div>
       )}

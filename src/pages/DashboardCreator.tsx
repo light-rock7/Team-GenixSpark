@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Sparkles, Palette, FileText, Send, AlertCircle, Plus, Info, ExternalLink } from 'lucide-react';
+import { Sparkles, Palette, FileText, Send, AlertCircle, Plus, ExternalLink } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
 import { Button } from '../components/ui/Button';
 
@@ -18,31 +18,13 @@ export const DashboardCreator: React.FC = () => {
                 <Sparkles className="w-3.5 h-3.5" />
                 AI Creator Account
               </span>
-              <span className="text-xs text-slate-400 font-mono">
-                ID: {profile?.id.slice(0, 8)}...
-              </span>
             </div>
             <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
               Welcome, {profile?.display_name || 'Creator'}
             </h1>
             <p className="mt-1 text-sm text-slate-500">
-              Authenticated as <span className="font-medium text-slate-700">{user?.email}</span>. Manage your generative models, style showcases, and client deliveries.
+              Logged in as <span className="font-medium text-slate-700">{user?.email}</span>. Organize your AI style showcases, pitch on brand briefs, and manage deliverables.
             </p>
-          </div>
-
-          <div className="flex items-center gap-3">
-            <div className="text-right hidden sm:block">
-              <div className="text-xs font-semibold text-slate-800">Persisted Profile Contract</div>
-              <div className="text-[11px] text-emerald-600 font-medium">Verified from public.user_profiles</div>
-            </div>
-          </div>
-        </div>
-
-        {/* Feature ownership notice */}
-        <div className="mt-6 p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-600 flex items-start gap-3">
-          <Info className="w-4 h-4 text-violet-600 shrink-0 mt-0.5" />
-          <div className="leading-relaxed">
-            <span className="font-semibold text-slate-800">Stage 1 Foundation:</span> This dashboard shell is wired to your authenticated Supabase session and role. Member 2 will connect Creator Portfolio management, prompt showcases, and brief application pipelines here.
           </div>
         </div>
       </div>
@@ -110,7 +92,7 @@ export const DashboardCreator: React.FC = () => {
             No AI Portfolios Published Yet
           </h3>
           <p className="mt-2 text-sm text-slate-500 max-w-md mx-auto leading-relaxed">
-            Showcase your model fine-tunes, LoRAs, and prompt workflow samples to attract brand contracts.
+            Showcase your model fine-tunes, prompt frameworks, and generative style samples to apply for creative briefs.
           </p>
           <div className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-3">
             <Button
@@ -119,12 +101,9 @@ export const DashboardCreator: React.FC = () => {
               disabled
               leftIcon={<Plus className="w-4 h-4" />}
             >
-              Add New Portfolio (Member 2 Module)
+              Add New Portfolio (Coming Soon)
             </Button>
           </div>
-          <p className="mt-4 text-xs text-slate-400">
-            Portfolio creation and showcase features are assigned to Member 2.
-          </p>
         </div>
       )}
 
@@ -137,7 +116,7 @@ export const DashboardCreator: React.FC = () => {
             No Active Brief Applications
           </h3>
           <p className="mt-2 text-sm text-slate-500 max-w-md mx-auto leading-relaxed">
-            Browse creative briefs posted by verified brands and submit targeted proposals with prompt samples.
+            Browse creative briefs published by brands and submit proposals with your style samples.
           </p>
           <div className="mt-6">
             <Button
@@ -146,7 +125,7 @@ export const DashboardCreator: React.FC = () => {
               disabled
               leftIcon={<ExternalLink className="w-4 h-4" />}
             >
-              Explore Briefs (Member 3 Module)
+              Explore Creative Briefs (Coming Soon)
             </Button>
           </div>
         </div>
@@ -161,32 +140,34 @@ export const DashboardCreator: React.FC = () => {
             No Deliveries in Progress
           </h3>
           <p className="mt-2 text-sm text-slate-500 max-w-md mx-auto leading-relaxed">
-            Active milestone deliveries, generation logs, and escrow approvals will appear here once contracts are awarded.
+            Active milestone deliveries, generation logs, and review status will appear here once brief proposals are accepted.
           </p>
         </div>
       )}
 
-      {/* Account Verification & Technical Handshake Spec */}
-      <div className="mt-10 p-6 rounded-2xl bg-slate-900 text-white">
-        <h4 className="text-sm font-bold flex items-center gap-2 text-violet-300">
-          <AlertCircle className="w-4 h-4" />
-          Backend Integration Spec (Member 4 Contract)
-        </h4>
-        <div className="mt-3 grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
-          <div className="bg-slate-800/80 p-3 rounded-lg border border-slate-700">
-            <span className="text-slate-400 block mb-1">User ID:</span>
-            <span className="font-mono text-slate-200 break-all">{user?.id}</span>
-          </div>
-          <div className="bg-slate-800/80 p-3 rounded-lg border border-slate-700">
-            <span className="text-slate-400 block mb-1">User Role:</span>
-            <span className="font-semibold text-violet-300 uppercase">{profile?.role}</span>
-          </div>
-          <div className="bg-slate-800/80 p-3 rounded-lg border border-slate-700">
-            <span className="text-slate-400 block mb-1">Table Contract:</span>
-            <span className="font-mono text-emerald-400">public.user_profiles</span>
+      {/* Account Verification & Technical Diagnostics (Dev Environment Only) */}
+      {import.meta.env.DEV && (
+        <div className="mt-10 p-6 rounded-2xl bg-slate-900 text-white">
+          <h4 className="text-xs font-mono font-bold flex items-center gap-2 text-violet-300">
+            <AlertCircle className="w-3.5 h-3.5" />
+            [DEV ONLY] Profile Session Diagnostics
+          </h4>
+          <div className="mt-3 grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
+            <div className="bg-slate-800/80 p-3 rounded-lg border border-slate-700">
+              <span className="text-slate-400 block mb-1">User ID:</span>
+              <span className="font-mono text-slate-200 break-all">{user?.id}</span>
+            </div>
+            <div className="bg-slate-800/80 p-3 rounded-lg border border-slate-700">
+              <span className="text-slate-400 block mb-1">Role:</span>
+              <span className="font-semibold text-violet-300 uppercase">{profile?.role}</span>
+            </div>
+            <div className="bg-slate-800/80 p-3 rounded-lg border border-slate-700">
+              <span className="text-slate-400 block mb-1">Profile Table:</span>
+              <span className="font-mono text-emerald-400">public.user_profiles</span>
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };
