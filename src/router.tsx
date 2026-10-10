@@ -10,6 +10,8 @@ import { CreatorPortfolio } from './pages/CreatorPortfolio';
 import { CreatorPortfolioNew } from './pages/CreatorPortfolioNew';
 import { CreatorPublicProfile } from './pages/CreatorPublicProfile';
 import { Marketplace } from './pages/Marketplace';
+import { BrandBriefNew } from './pages/BrandBriefNew';
+import { BriefDetail } from './pages/BriefDetail';
 import { NotFound } from './pages/NotFound';
 import { ProtectedRoute, DashboardEntry } from './components/auth/ProtectedRoute';
 
@@ -25,6 +27,10 @@ export const router = createBrowserRouter([
       {
         path: 'marketplace',
         element: <Marketplace />,
+      },
+      {
+        path: 'briefs/:id',
+        element: <BriefDetail />,
       },
       {
         path: 'dashboard',
@@ -75,6 +81,14 @@ export const router = createBrowserRouter([
         element: (
           <ProtectedRoute allowedRole="brand">
             <DashboardBrand />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: 'brand/briefs/new',
+        element: (
+          <ProtectedRoute allowedRole="brand">
+            <BrandBriefNew />
           </ProtectedRoute>
         ),
       },
