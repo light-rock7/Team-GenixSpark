@@ -9,6 +9,7 @@ import { CreatorProfileEdit } from './pages/CreatorProfileEdit';
 import { CreatorPortfolio } from './pages/CreatorPortfolio';
 import { CreatorPortfolioNew } from './pages/CreatorPortfolioNew';
 import { CreatorPublicProfile } from './pages/CreatorPublicProfile';
+import { Marketplace } from './pages/Marketplace';
 import { NotFound } from './pages/NotFound';
 import { ProtectedRoute, DashboardEntry } from './components/auth/ProtectedRoute';
 
@@ -20,6 +21,10 @@ export const router = createBrowserRouter([
       {
         index: true,
         element: <Home />,
+      },
+      {
+        path: 'marketplace',
+        element: <Marketplace />,
       },
       {
         path: 'dashboard',
