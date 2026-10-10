@@ -8,7 +8,6 @@ import {
   MapPin,
   Save,
   ShieldCheck,
-  Sparkles,
   UserRound,
 } from 'lucide-react';
 import { CreatorWorkspaceNav } from '../components/creator/CreatorWorkspaceNav';
