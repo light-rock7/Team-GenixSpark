@@ -47,6 +47,18 @@ export const getBrandBriefs = async (brandId: string): Promise<CreativeBrief[]> 
   return (data || []) as CreativeBrief[];
 };
 
+export const getOpenBriefs = async (): Promise<CreativeBrief[]> => {
+  const client = requireSupabase();
+  const { data, error } = await client
+    .from('creative_briefs')
+    .select('*')
+    .eq('status', 'open')
+    .order('created_at', { ascending: false });
+
+  if (error) throw new Error(`Unable to load open briefs: ${error.message}`);
+  return (data || []) as CreativeBrief[];
+};
+
 export const getCreativeBrief = async (briefId: string): Promise<CreativeBrief> => {
   const client = requireSupabase();
   const { data, error } = await client
