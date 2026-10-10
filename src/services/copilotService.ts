@@ -33,6 +33,39 @@ const normalizeResponse = (value: unknown): CreatorCopilotResponse => {
   };
 };
 
+const getFunctionErrorMessage = async (error: unknown) => {
+  let message = error instanceof Error && error.message ? error.message : 'Creator Copilot is unavailable.';
+  const context = error && typeof error === 'object' && 'context' in error
+    ? (error as { context?: unknown }).context
+    : undefined;
+
+  if (context instanceof Response) {
+    try {
+      const text = await context.clone().text();
+      if (text) {
+        try {
+          const payload = JSON.parse(text) as Record<string, unknown>;
+          if (typeof payload.error === 'string' && payload.error.trim()) message = payload.error.trim();
+        } catch {
+          message = text.slice(0, 300);
+        }
+      }
+    } catch {
+      // Keep the original SDK error if the response body cannot be inspected.
+    }
+  }
+
+  if (/unexpected end of json|failed to execute ['"]json['"]/i.test(message)) {
+    return 'Creator Copilot backend returned an incomplete response. Redeploy the latest Edge Function and try again.';
+  }
+
+  if (/404|not found|function/i.test(message)) {
+    return 'Creator Copilot backend is not deployed yet. Deploy the Supabase Edge Function and configure the AI secret.';
+  }
+
+  return message;
+};
+
 export const askCreatorCopilot = async (request: CreatorCopilotRequest): Promise<CreatorCopilotResponse> => {
   if (!supabase) throw new Error('Supabase is not configured. Add your project credentials and restart the app.');
 
@@ -47,14 +80,7 @@ export const askCreatorCopilot = async (request: CreatorCopilotRequest): Promise
     },
   });
 
-  if (error) {
-    const message = error.message || 'Creator Copilot is unavailable.';
-    if (/404|not found|function/i.test(message)) {
-      throw new Error('Creator Copilot backend is not deployed yet. Deploy the Supabase Edge Function and configure the AI secret.');
-    }
-    throw new Error(message);
-  }
-
+  if (error) throw new Error(await getFunctionErrorMessage(error));
   if (data?.error && typeof data.error === 'string') throw new Error(data.error);
   return normalizeResponse(data);
 };
