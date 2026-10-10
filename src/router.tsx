@@ -17,12 +17,14 @@ import { BrandBriefNew } from './pages/BrandBriefNew';
 import { BriefDetail } from './pages/BriefDetail';
 import { BriefApplications } from './pages/BriefApplications';
 import { NotFound } from './pages/NotFound';
+import { RouteError } from './pages/RouteError';
 import { ProtectedRoute, DashboardEntry } from './components/auth/ProtectedRoute';
 
 export const router = createBrowserRouter([
   {
     path: '/',
     element: <AppLayout />,
+    errorElement: <RouteError />,
     children: [
       {
         index: true,
@@ -137,9 +139,11 @@ export const router = createBrowserRouter([
   {
     path: '/auth',
     element: <Auth />,
+    errorElement: <RouteError />,
   },
   {
     path: '/auth/callback',
     element: <AuthCallback />,
+    errorElement: <RouteError />,
   },
 ]);
