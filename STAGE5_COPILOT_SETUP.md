@@ -17,20 +17,20 @@ Using the Supabase CLI after linking the project:
 
 ```bash
 supabase secrets set GROQ_API_KEY=YOUR_GROQ_API_KEY
-supabase secrets set GROQ_MODEL=llama-3.3-70b-versatile
+supabase secrets set GROQ_MODEL=openai/gpt-oss-120b
 ```
 
-`GROQ_MODEL` is optional; the function defaults to `llama-3.3-70b-versatile`.
+`GROQ_MODEL` is optional; the function defaults to `openai/gpt-oss-120b`.
 
 Other Groq-supported model IDs can be used later without changing frontend code.
 
 ## 3. Deploy the function
 
 ```bash
-supabase functions deploy creator-copilot
+supabase functions deploy creator-copilot --no-verify-jwt
 ```
 
-The function verifies the signed-in Supabase user and only serves accounts whose `user_profiles.role` is `creator`.
+The function still enforces authentication internally: it requires the caller's `Authorization` header, validates the signed-in user with Supabase Auth, and only serves accounts whose `user_profiles.role` is `creator`.
 
 ## 4. Verify
 
@@ -46,6 +46,7 @@ The function verifies the signed-in Supabase user and only serves accounts whose
 
 - Never commit `GROQ_API_KEY`.
 - Never expose a Groq key in `.env.local` under a `VITE_*` variable.
+- The frontend must use a Supabase publishable key, never a Supabase secret/service-role key.
 - Copilot suggestions are not automatically treated as verified facts.
 - The function is instructed not to invent clients, results, tools, skills, awards, years of experience, or portfolio evidence.
 - Provider calls are made server-side from the Supabase Edge Function to Groq's OpenAI-compatible API.
