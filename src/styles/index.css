@@ -2,28 +2,42 @@
 
 @layer base {
   :root {
-    --color-navy-950: #0a0f1d;
-    --color-navy-900: #0f172a;
-    --color-navy-800: #1e293b;
-    --color-navy-700: #334155;
-    --color-navy-600: #475569;
-    --color-violet-primary: #7c3aed;
-    --color-violet-accent: #8b5cf6;
-    --color-violet-light: #f5f3ff;
+    --ink-950: #0b1020;
+    --ink-900: #12182a;
+    --ink-700: #334155;
+    --paper: #f7f8fb;
+    --surface: #ffffff;
+    --line: #e7e9f0;
+    --violet: #6d4aff;
+    --violet-dark: #5538e8;
+    --violet-soft: #f1edff;
   }
 
   html {
     scroll-behavior: smooth;
+    background: var(--paper);
   }
 
   body {
     margin: 0;
     min-height: 100vh;
-    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-    color: #0f172a;
-    background-color: #f8fafc;
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    color: var(--ink-950);
+    background:
+      radial-gradient(circle at 20% -10%, rgba(109, 74, 255, 0.06), transparent 28rem),
+      var(--paper);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  ::selection {
+    background: #ddd5ff;
+    color: #171226;
   }
 
   button,
@@ -34,17 +48,57 @@
     -webkit-tap-highlight-color: transparent;
   }
 
-  code, pre {
+  button,
+  input,
+  textarea,
+  select {
+    font: inherit;
+  }
+
+  code,
+  pre {
     font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   }
 }
 
 @layer utilities {
+  .page-shell {
+    width: 100%;
+    max-width: 1280px;
+    margin-inline: auto;
+    padding-inline: 1rem;
+  }
+
+  @media (min-width: 640px) {
+    .page-shell { padding-inline: 1.5rem; }
+  }
+
+  @media (min-width: 1024px) {
+    .page-shell { padding-inline: 2rem; }
+  }
+
+  .surface-card {
+    background: rgba(255,255,255,.92);
+    border: 1px solid rgba(226,232,240,.9);
+    box-shadow: 0 1px 2px rgba(15,23,42,.03), 0 12px 32px rgba(15,23,42,.045);
+  }
+
+  .soft-grid {
+    background-image:
+      linear-gradient(rgba(255,255,255,.055) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,.055) 1px, transparent 1px);
+    background-size: 36px 36px;
+  }
+
   .no-scrollbar {
     scrollbar-width: none;
   }
 
   .no-scrollbar::-webkit-scrollbar {
     display: none;
+  }
+
+  .text-balance {
+    text-wrap: balance;
   }
 }

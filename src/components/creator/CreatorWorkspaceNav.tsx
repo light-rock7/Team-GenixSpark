@@ -1,62 +1,43 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
-import { Eye, Images, LayoutDashboard, Sparkles, UserRound } from 'lucide-react';
+import { Eye, Sparkles } from 'lucide-react';
+import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 
-const links = [
-  { to: '/dashboard/creator', label: 'Overview', icon: LayoutDashboard, end: true },
-  { to: '/creator/profile', label: 'Profile', icon: UserRound, end: false },
-  { to: '/creator/portfolio', label: 'Portfolio', icon: Images, end: false },
-];
+const pageMeta = (pathname: string) => {
+  if (pathname.includes('/creator/profile')) return { label: 'Creator profile', description: 'Identity, positioning and marketplace signals' };
+  if (pathname.includes('/creator/portfolio/new')) return { label: 'New portfolio case study', description: 'Document the work and the workflow behind it' };
+  if (pathname.includes('/creator/portfolio')) return { label: 'AI portfolio', description: 'Manage published work and private drafts' };
+  if (pathname.startsWith('/creators/')) return { label: 'Public profile preview', description: 'How brands see your creator presence' };
+  return { label: 'Creator studio', description: 'Portfolio strength, workflow proof and marketplace readiness' };
+};
 
 export const CreatorWorkspaceNav: React.FC = () => {
   const { user } = useAuth();
+  const location = useLocation();
+  const meta = pageMeta(location.pathname);
 
   return (
-    <div className="border-b border-slate-200/80 bg-white/80 backdrop-blur-xl">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between gap-4 overflow-x-auto py-3 no-scrollbar">
-          <div className="flex items-center gap-2 shrink-0 pr-4">
-            <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-violet-600 to-indigo-600 text-white flex items-center justify-center shadow-sm shadow-violet-200">
-              <Sparkles className="h-4.5 w-4.5" />
-            </div>
-            <div className="hidden sm:block">
-              <p className="text-xs font-extrabold tracking-tight text-slate-900">Creator Studio</p>
-              <p className="text-[10px] font-medium text-slate-500">Profile & AI portfolio workspace</p>
-            </div>
+    <div className="border-b border-slate-200/80 bg-white">
+      <div className="page-shell flex min-h-[68px] items-center justify-between gap-4 py-3">
+        <div className="flex min-w-0 items-center gap-3">
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-violet-100 bg-violet-50 text-violet-700">
+            <Sparkles className="h-4 w-4" />
           </div>
-
-          <nav className="flex items-center gap-1 rounded-xl bg-slate-100/80 p-1 border border-slate-200/70 shrink-0">
-            {links.map(({ to, label, icon: Icon, end }) => (
-              <NavLink
-                key={to}
-                to={to}
-                end={end}
-                className={({ isActive }) => `inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-semibold transition-all ${
-                  isActive
-                    ? 'bg-white text-violet-700 shadow-sm ring-1 ring-slate-200'
-                    : 'text-slate-600 hover:text-slate-900 hover:bg-white/60'
-                }`}
-              >
-                <Icon className="h-3.5 w-3.5" />
-                {label}
-              </NavLink>
-            ))}
-            {user?.id && (
-              <NavLink
-                to={`/creators/${user.id}`}
-                className={({ isActive }) => `inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-semibold transition-all ${
-                  isActive
-                    ? 'bg-white text-violet-700 shadow-sm ring-1 ring-slate-200'
-                    : 'text-slate-600 hover:text-slate-900 hover:bg-white/60'
-                }`}
-              >
-                <Eye className="h-3.5 w-3.5" />
-                Public view
-              </NavLink>
-            )}
-          </nav>
+          <div className="min-w-0">
+            <p className="truncate text-sm font-extrabold tracking-[-0.025em] text-slate-950">{meta.label}</p>
+            <p className="mt-0.5 hidden truncate text-[10px] text-slate-400 sm:block">{meta.description}</p>
+          </div>
         </div>
+
+        {user?.id && !location.pathname.startsWith('/creators/') && (
+          <Link
+            to={`/creators/${user.id}`}
+            className="inline-flex shrink-0 items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-2 text-[11px] font-semibold text-slate-600 shadow-sm transition-colors hover:border-slate-300 hover:text-slate-950"
+          >
+            <Eye className="h-3.5 w-3.5" />
+            Public profile
+          </Link>
+        )}
       </div>
     </div>
   );
