@@ -1,5 +1,5 @@
 import React from 'react';
-import { CalendarDays, ExternalLink, IndianRupee, Trash2, WandSparkles } from 'lucide-react';
+import { CalendarDays, ExternalLink, IndianRupee, Trash2, UsersRound, WandSparkles } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import type { BriefStatus, CreativeBrief } from '../../types/brief';
 
@@ -68,6 +68,9 @@ export const BriefCard: React.FC<BriefCardProps> = ({ brief, editable = false, o
 
       {editable && (
         <div className="mt-4 flex flex-wrap items-center gap-2 border-t border-slate-100 pt-4">
+          <Link to={`/briefs/${brief.id}/applications`} className="inline-flex items-center gap-1.5 rounded-lg border border-violet-200 bg-violet-50 px-3 py-2 text-[10px] font-semibold text-violet-700 hover:bg-violet-100">
+            <UsersRound className="h-3.5 w-3.5" /> Review applicants
+          </Link>
           {brief.status === 'draft' && (
             <button type="button" onClick={() => onStatusChange?.(brief, 'open')} className="rounded-lg bg-slate-950 px-3 py-2 text-[10px] font-semibold text-white hover:bg-violet-700">Publish brief</button>
           )}
