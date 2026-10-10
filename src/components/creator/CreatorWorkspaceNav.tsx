@@ -1,10 +1,12 @@
 import React from 'react';
-import { Eye, Images, LayoutDashboard, Sparkles, UserRound, WandSparkles } from 'lucide-react';
+import { BriefcaseBusiness, Eye, Images, LayoutDashboard, ListChecks, Sparkles, UserRound, WandSparkles } from 'lucide-react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 
 const pageMeta = (pathname: string) => {
   if (pathname.includes('/creator/copilot')) return { label: 'Creator Copilot', description: 'AI guidance grounded in your profile and workflow proof' };
+  if (pathname.includes('/creator/applications')) return { label: 'Applications', description: 'Track proposals, shortlist movement and awarded work' };
+  if (pathname.includes('/opportunities')) return { label: 'Live briefs', description: 'Open brand requirements ranked by your real capability signals' };
   if (pathname.includes('/creator/profile')) return { label: 'Creator profile', description: 'Identity, positioning and marketplace signals' };
   if (pathname.includes('/creator/portfolio/new')) return { label: 'New case study', description: 'Document the work and workflow behind it' };
   if (pathname.includes('/creator/portfolio')) return { label: 'AI portfolio', description: 'Published work, drafts and workflow proof' };
@@ -22,6 +24,8 @@ export const CreatorWorkspaceNav: React.FC = () => {
     { to: '/creator/profile', label: 'Profile', icon: UserRound },
     { to: '/creator/copilot', label: 'AI Copilot', icon: WandSparkles },
     { to: '/creator/portfolio', label: 'Portfolio', icon: Images },
+    { to: '/opportunities', label: 'Briefs', icon: BriefcaseBusiness },
+    { to: '/creator/applications', label: 'Applications', icon: ListChecks },
     ...(user?.id ? [{ to: `/creators/${user.id}`, label: 'Public view', icon: Eye }] : []),
   ];
 
