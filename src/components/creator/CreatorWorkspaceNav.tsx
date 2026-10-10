@@ -1,9 +1,10 @@
 import React from 'react';
-import { Eye, Images, LayoutDashboard, Sparkles, UserRound } from 'lucide-react';
+import { Eye, Images, LayoutDashboard, Sparkles, UserRound, WandSparkles } from 'lucide-react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 
 const pageMeta = (pathname: string) => {
+  if (pathname.includes('/creator/copilot')) return { label: 'Creator Copilot', description: 'AI guidance grounded in your profile and workflow proof' };
   if (pathname.includes('/creator/profile')) return { label: 'Creator profile', description: 'Identity, positioning and marketplace signals' };
   if (pathname.includes('/creator/portfolio/new')) return { label: 'New case study', description: 'Document the work and workflow behind it' };
   if (pathname.includes('/creator/portfolio')) return { label: 'AI portfolio', description: 'Published work, drafts and workflow proof' };
@@ -19,6 +20,7 @@ export const CreatorWorkspaceNav: React.FC = () => {
   const navItems = [
     { to: '/dashboard/creator', label: 'Overview', icon: LayoutDashboard },
     { to: '/creator/profile', label: 'Profile', icon: UserRound },
+    { to: '/creator/copilot', label: 'AI Copilot', icon: WandSparkles },
     { to: '/creator/portfolio', label: 'Portfolio', icon: Images },
     ...(user?.id ? [{ to: `/creators/${user.id}`, label: 'Public view', icon: Eye }] : []),
   ];
