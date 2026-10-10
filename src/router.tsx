@@ -5,6 +5,10 @@ import { Auth } from './pages/Auth';
 import { AuthCallback } from './pages/AuthCallback';
 import { DashboardCreator } from './pages/DashboardCreator';
 import { DashboardBrand } from './pages/DashboardBrand';
+import { CreatorProfileEdit } from './pages/CreatorProfileEdit';
+import { CreatorPortfolio } from './pages/CreatorPortfolio';
+import { CreatorPortfolioNew } from './pages/CreatorPortfolioNew';
+import { CreatorPublicProfile } from './pages/CreatorPublicProfile';
 import { NotFound } from './pages/NotFound';
 import { ProtectedRoute, DashboardEntry } from './components/auth/ProtectedRoute';
 
@@ -32,6 +36,34 @@ export const router = createBrowserRouter([
             <DashboardCreator />
           </ProtectedRoute>
         ),
+      },
+      {
+        path: 'creator/profile',
+        element: (
+          <ProtectedRoute allowedRole="creator">
+            <CreatorProfileEdit />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: 'creator/portfolio',
+        element: (
+          <ProtectedRoute allowedRole="creator">
+            <CreatorPortfolio />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: 'creator/portfolio/new',
+        element: (
+          <ProtectedRoute allowedRole="creator">
+            <CreatorPortfolioNew />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: 'creators/:id',
+        element: <CreatorPublicProfile />,
       },
       {
         path: 'dashboard/brand',
