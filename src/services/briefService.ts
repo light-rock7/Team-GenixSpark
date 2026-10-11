@@ -17,6 +17,8 @@ export const calculateBriefReadiness = (brief: Partial<CreativeBriefCreate>): Br
   const checks = [
     { label: 'Clear title', done: Boolean(brief.title?.trim()) },
     { label: 'Project description', done: Boolean(brief.description?.trim() && brief.description.trim().length >= 40) },
+    { label: 'Content type', done: Boolean(brief.content_type?.trim()) },
+    { label: 'Creative style', done: Boolean(brief.style?.trim()) },
     { label: 'Category', done: Boolean(brief.category?.trim()) },
     { label: 'Deliverables', done: Boolean(brief.deliverables?.trim()) },
     { label: 'Required AI tools', done: Boolean(brief.required_tools?.length) },
@@ -90,6 +92,8 @@ export const createCreativeBrief = async (
       title: input.title.trim(),
       description: input.description.trim(),
       category: normalizeNullable(input.category),
+      content_type: normalizeNullable(input.content_type),
+      style: normalizeNullable(input.style),
       required_tools: input.required_tools,
       required_skills: input.required_skills,
       deliverables: normalizeNullable(input.deliverables),
