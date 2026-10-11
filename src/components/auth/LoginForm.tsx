@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Mail, Lock, AlertCircle } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
 import { Button } from '../ui/Button';
@@ -9,8 +9,17 @@ interface LoginFormProps {
   onToggleMode?: () => void;
 }
 
+interface AuthReturnState {
+  from?: {
+    pathname?: string;
+    search?: string;
+    hash?: string;
+  };
+}
+
 export const LoginForm: React.FC<LoginFormProps> = ({ onToggleMode }) => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { login, isConfigured } = useAuth();
 
   const [email, setEmail] = useState('');
@@ -49,8 +58,12 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onToggleMode }) => {
         return;
       }
 
-      // Success: navigate to protected dashboard entry
-      navigate('/dashboard');
+      const from = (location.state as AuthReturnState | null)?.from;
+      const returnTo = from?.pathname
+        ? `${from.pathname}${from.search || ''}${from.hash || ''}`
+        : '/dashboard';
+
+      navigate(returnTo, { replace: true });
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'An unexpected error occurred during login.';
       setErrorMessage(msg);

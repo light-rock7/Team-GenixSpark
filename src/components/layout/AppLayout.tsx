@@ -1,7 +1,8 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
-import { Navbar } from './Navbar';
 import { Sparkles } from 'lucide-react';
+import { Navbar } from './Navbar';
+import { ScrollToTop } from './ScrollToTop';
 
 interface AppLayoutProps {
   children?: React.ReactNode;
@@ -9,31 +10,29 @@ interface AppLayoutProps {
 
 export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
   return (
-    <div className="min-h-screen flex flex-col bg-slate-50 text-slate-900 selection:bg-violet-200 selection:text-violet-900">
+    <div className="min-h-screen bg-[#f7f8fb] text-slate-950">
+      <ScrollToTop />
       <Navbar />
 
-      <main className="flex-1 flex flex-col">
+      <main className="min-h-[calc(100vh-68px)]">
         {children || <Outlet />}
       </main>
 
-      <footer className="border-t border-slate-200 bg-white py-8">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-2">
-              <div className="w-6 h-6 rounded-lg bg-slate-900 flex items-center justify-center text-white">
-                <Sparkles className="w-3.5 h-3.5 text-violet-400" />
+      <footer className="border-t border-slate-200/80 bg-white">
+        <div className="page-shell py-7">
+          <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex items-center gap-3">
+              <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-slate-950 text-violet-300">
+                <Sparkles className="h-4 w-4" />
               </div>
-              <span className="text-xs font-semibold text-slate-900">
-                GenixSpark AI Creator Marketplace
-              </span>
-              <span className="text-[10px] text-slate-400">
-                • Stage 1 Foundation
-              </span>
+              <div>
+                <p className="text-xs font-extrabold tracking-[-0.02em] text-slate-900">GenixSpark</p>
+                <p className="mt-0.5 text-[10px] text-slate-400">AI-native creator discovery and workflow proof.</p>
+              </div>
             </div>
-
-            <div className="text-xs text-slate-500 text-center sm:text-right">
-              Built with React 19, TypeScript, Vite, Tailwind CSS, &amp; Supabase
-            </div>
+            <p className="text-[10px] font-medium tracking-[0.04em] text-slate-400">
+              Creator portfolios · Creative briefs · Explainable matching · Application pipeline
+            </p>
           </div>
         </div>
       </footer>

@@ -148,17 +148,17 @@ const visualStyles: { name: VisualStyle; detail: string; swatches: string[] }[] 
 
 const demoCreators: Creator[] = [
 
-  { id: 'c1', name: 'Studio Mango', category: 'Product photography', location: 'Hyderabad', style: 'Clean & minimal', price: 8000, platforms: 'Instagram Â· Website', bio: 'Product visuals for emerging consumer brands, with careful lighting and clean compositions.', initials: 'SM', color: 'bg-amber-100 text-amber-800', portfolio: ['Product stills', 'Lifestyle set', 'Packaging'] },
+  { id: 'c1', name: 'Studio Mango', category: 'Product photography', location: 'Hyderabad', style: 'Clean & minimal', price: 8000, platforms: 'Instagram · Website', bio: 'Product visuals for emerging consumer brands, with careful lighting and clean compositions.', initials: 'SM', color: 'bg-amber-100 text-amber-800', portfolio: ['Product stills', 'Lifestyle set', 'Packaging'] },
 
-  { id: 'c2', name: 'Aarav Creates', category: 'Short-form video', location: 'Bengaluru', style: 'Bold & energetic', price: 12000, platforms: 'Instagram Â· YouTube', bio: 'Fast-paced reels, launch videos, and creator-led storytelling for growing brands.', initials: 'AC', color: 'bg-violet-100 text-violet-800', portfolio: ['Launch reel', 'UGC ad', 'Behind the scenes'] },
+  { id: 'c2', name: 'Aarav Creates', category: 'Short-form video', location: 'Bengaluru', style: 'Bold & energetic', price: 12000, platforms: 'Instagram · YouTube', bio: 'Fast-paced reels, launch videos, and creator-led storytelling for growing brands.', initials: 'AC', color: 'bg-violet-100 text-violet-800', portfolio: ['Launch reel', 'UGC ad', 'Behind the scenes'] },
 
-  { id: 'c3', name: 'Earthtone Collective', category: 'UGC / testimonial', location: 'Chennai', style: 'Natural & authentic', price: 6500, platforms: 'Instagram Â· TikTok', bio: 'Relatable UGC and warm lifestyle content that feels natural rather than over-produced.', initials: 'EC', color: 'bg-emerald-100 text-emerald-800', portfolio: ['Routine video', 'Testimonial', 'Lifestyle'] },
+  { id: 'c3', name: 'Earthtone Collective', category: 'UGC / testimonial', location: 'Chennai', style: 'Natural & authentic', price: 6500, platforms: 'Instagram · TikTok', bio: 'Relatable UGC and warm lifestyle content that feels natural rather than over-produced.', initials: 'EC', color: 'bg-emerald-100 text-emerald-800', portfolio: ['Routine video', 'Testimonial', 'Lifestyle'] },
 
-  { id: 'c4', name: 'Frame & Form', category: 'Brand campaign', location: 'Mumbai', style: 'Luxury & premium', price: 18000, platforms: 'Instagram Â· Website', bio: 'Premium campaign concepts, refined product photography, and art direction.', initials: 'FF', color: 'bg-slate-200 text-slate-800', portfolio: ['Campaign hero', 'Editorial set', 'Brand story'] },
+  { id: 'c4', name: 'Frame & Form', category: 'Brand campaign', location: 'Mumbai', style: 'Luxury & premium', price: 18000, platforms: 'Instagram · Website', bio: 'Premium campaign concepts, refined product photography, and art direction.', initials: 'FF', color: 'bg-slate-200 text-slate-800', portfolio: ['Campaign hero', 'Editorial set', 'Brand story'] },
 
-  { id: 'c5', name: 'ColorPop Design', category: 'Social media graphics', location: 'Vijayawada', style: 'Playful & colorful', price: 5000, platforms: 'Instagram Â· Facebook', bio: 'Bright, accessible social graphics and campaign kits for small businesses.', initials: 'CP', color: 'bg-pink-100 text-pink-800', portfolio: ['Carousel', 'Promo set', 'Story pack'] },
+  { id: 'c5', name: 'ColorPop Design', category: 'Social media graphics', location: 'Vijayawada', style: 'Playful & colorful', price: 5000, platforms: 'Instagram · Facebook', bio: 'Bright, accessible social graphics and campaign kits for small businesses.', initials: 'CP', color: 'bg-pink-100 text-pink-800', portfolio: ['Carousel', 'Promo set', 'Story pack'] },
 
-  { id: 'c6', name: 'Motion House', category: 'Short-form video', location: 'Hyderabad', style: 'Editorial & cinematic', price: 15000, platforms: 'Instagram Â· YouTube', bio: 'Cinematic short-form films, product motion, and story-driven launch content.', initials: 'MH', color: 'bg-blue-100 text-blue-800', portfolio: ['Brand film', 'Product motion', 'Cinematic reel'] },
+  { id: 'c6', name: 'Motion House', category: 'Short-form video', location: 'Hyderabad', style: 'Editorial & cinematic', price: 15000, platforms: 'Instagram · YouTube', bio: 'Cinematic short-form films, product motion, and story-driven launch content.', initials: 'MH', color: 'bg-blue-100 text-blue-800', portfolio: ['Brand film', 'Product motion', 'Cinematic reel'] },
 
 ];
 
@@ -442,7 +442,7 @@ export const DashboardBrand: React.FC = () => {
 
               Welcome, <span className="font-semibold text-white">{profile?.display_name || 'Brand Partner'}</span>
 
-              {user?.email ? ` Â· ${user.email}` : ''}
+              {user?.email ? ` · ${user.email}` : ''}
 
             </p>
 
@@ -518,7 +518,7 @@ export const DashboardBrand: React.FC = () => {
 
           <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0" />
 
-          <div className="flex-1 text-sm"><p className="font-bold">Brief saved in this demo</p><p className="mt-1">â€œ{submittedTitle}â€ is now in your briefs. Next, discover creators that match your direction.</p></div>
+          <div className="flex-1 text-sm"><p className="font-bold">Brief saved in this demo</p><p className="mt-1">“{submittedTitle}” is now in your briefs. Next, discover creators that match your direction.</p></div>
 
           <button aria-label="Dismiss message" onClick={() => setSubmittedTitle('')} className="rounded-lg p-1 hover:bg-emerald-100"><X className="h-4 w-4" /></button>
 
@@ -548,7 +548,7 @@ export const DashboardBrand: React.FC = () => {
 
               <h3 className="mt-4 text-lg font-bold text-slate-900">Start with your idea, not a blank template.</h3>
 
-              <p className="mx-auto mt-2 max-w-lg text-sm leading-6 text-slate-500">Tell us what you want to achieve. Weâ€™ll help you organize the content, style, deliverables, and budget into a brief creators can understand.</p>
+              <p className="mx-auto mt-2 max-w-lg text-sm leading-6 text-slate-500">Tell us what you want to achieve. We’ll help you organize the content, style, deliverables, and budget into a brief creators can understand.</p>
 
               <Button onClick={openCreate} className="mt-5" leftIcon={<Sparkles className="h-4 w-4" />}>Create my first brief</Button>
 
@@ -584,7 +584,7 @@ export const DashboardBrand: React.FC = () => {
 
                   <div className="mt-4 flex flex-wrap gap-4 text-sm text-slate-600">
 
-                    <span className="inline-flex items-center gap-1.5"><CircleDollarSign className="h-4 w-4" />â‚¹{brief.budget.toLocaleString('en-IN')}</span>
+                    <span className="inline-flex items-center gap-1.5"><CircleDollarSign className="h-4 w-4" />?{brief.budget.toLocaleString('en-IN')}</span>
 
                     <span className="inline-flex items-center gap-1.5"><CalendarDays className="h-4 w-4" />{brief.deadline}</span>
 
@@ -644,7 +644,7 @@ export const DashboardBrand: React.FC = () => {
 
           <div className="border-b border-slate-200 bg-slate-50 px-5 py-5 sm:px-8">
 
-            <div className="flex items-start justify-between gap-3"><div><p className="text-xs font-bold uppercase tracking-widest text-violet-700">Guided brief builder</p><h2 className="mt-1 text-2xl font-extrabold text-slate-900">{editingId ? 'Edit your campaign' : 'Letâ€™s shape your campaign idea'}</h2><p className="mt-1 text-sm text-slate-500">Four short steps. You can review everything before saving.</p></div><button onClick={resetBuilder} aria-label="Close brief builder" className="rounded-xl p-2 text-slate-500 hover:bg-slate-200"><X className="h-5 w-5" /></button></div>
+            <div className="flex items-start justify-between gap-3"><div><p className="text-xs font-bold uppercase tracking-widest text-violet-700">Guided brief builder</p><h2 className="mt-1 text-2xl font-extrabold text-slate-900">{editingId ? 'Edit your campaign' : 'Let’s shape your campaign idea'}</h2><p className="mt-1 text-sm text-slate-500">Four short steps. You can review everything before saving.</p></div><button onClick={resetBuilder} aria-label="Close brief builder" className="rounded-xl p-2 text-slate-500 hover:bg-slate-200"><X className="h-5 w-5" /></button></div>
 
             <div className="mt-5 grid grid-cols-4 gap-2">
 
@@ -666,7 +666,7 @@ export const DashboardBrand: React.FC = () => {
 
               <div><label className="mb-1.5 block text-sm font-semibold text-slate-700">What kind of content do you need?</label><div className="grid gap-2 sm:grid-cols-2">{(['Product photography', 'Short-form video', 'Social media graphics', 'UGC / testimonial', 'Brand campaign'] as ContentType[]).map(type => <button key={type} type="button" onClick={() => update('contentType', type)} className={`rounded-xl border p-3 text-left text-sm font-semibold ${form.contentType === type ? 'border-violet-500 bg-violet-50 text-violet-800 ring-1 ring-violet-200' : 'border-slate-200 hover:border-slate-300'}`}>{type}</button>)}</div></div>
 
-              <Input label="Who do you want to reach?" placeholder="e.g. College students aged 18â€“24 who care about skincare" value={form.audience} onChange={e => update('audience', e.target.value)} required />
+              <Input label="Who do you want to reach?" placeholder="e.g. College students aged 18–24 who care about skincare" value={form.audience} onChange={e => update('audience', e.target.value)} required />
 
               <div><label className="mb-1.5 block text-sm font-semibold text-slate-700">Describe your idea</label><textarea rows={4} value={form.description} onChange={e => update('description', e.target.value)} placeholder="What are you promoting? What should people understand, feel, or do after seeing the content?" className="w-full rounded-xl border border-slate-300 px-3.5 py-3 text-sm outline-none focus:border-violet-500 focus:ring-2 focus:ring-violet-100" required /></div>
 
@@ -690,7 +690,7 @@ export const DashboardBrand: React.FC = () => {
 
               <div><h3 className="text-lg font-bold text-slate-900">Set a realistic budget and deadline</h3><p className="mt-1 text-sm text-slate-500">These details help creators decide whether the project is a fit.</p></div>
 
-              <div className="grid gap-5 sm:grid-cols-2"><Input label="Total budget (â‚¹ INR)" type="number" min="1" step="1" placeholder="e.g. 10000" value={form.budget} onChange={e => update('budget', e.target.value)} leftIcon={<CircleDollarSign className="h-4 w-4" />} required /><Input label="Target delivery date" type="date" min={new Date().toISOString().slice(0, 10)} value={form.deadline} onChange={e => update('deadline', e.target.value)} leftIcon={<CalendarDays className="h-4 w-4" />} required /></div>
+              <div className="grid gap-5 sm:grid-cols-2"><Input label="Total budget (? INR)" type="number" min="1" step="1" placeholder="e.g. 10000" value={form.budget} onChange={e => update('budget', e.target.value)} leftIcon={<CircleDollarSign className="h-4 w-4" />} required /><Input label="Target delivery date" type="date" min={new Date().toISOString().slice(0, 10)} value={form.deadline} onChange={e => update('deadline', e.target.value)} leftIcon={<CalendarDays className="h-4 w-4" />} required /></div>
 
               <div className="rounded-2xl bg-violet-50 p-4"><p className="text-sm font-bold text-violet-900">Helpful tip</p><p className="mt-1 text-sm leading-6 text-violet-800">Be clear about the number of assets and the deadline. If you need paid-ad usage or several revision rounds, mention that in your must-have requirements.</p></div>
 
@@ -702,7 +702,7 @@ export const DashboardBrand: React.FC = () => {
 
               <div className="rounded-2xl border border-slate-200 p-5"><div className="flex flex-wrap items-start justify-between gap-3"><div><p className="text-xs font-bold uppercase tracking-wide text-violet-700">{form.objective}</p><h4 className="mt-1 text-xl font-extrabold text-slate-900">{form.title || 'Untitled campaign'}</h4></div><span className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-bold text-emerald-700">Ready to review</span></div><p className="mt-3 whitespace-pre-wrap text-sm leading-6 text-slate-600">{form.description || 'Add a description in step 1.'}</p>
 
-                <div className="mt-5 grid gap-4 border-t border-slate-100 pt-4 sm:grid-cols-2"><div><p className="text-xs font-semibold uppercase tracking-wide text-slate-400">Audience</p><p className="mt-1 text-sm font-medium text-slate-800">{form.audience || 'Not provided'}</p></div><div><p className="text-xs font-semibold uppercase tracking-wide text-slate-400">Content type</p><p className="mt-1 text-sm font-medium text-slate-800">{form.contentType}</p></div><div><p className="text-xs font-semibold uppercase tracking-wide text-slate-400">Visual direction</p><p className="mt-1 text-sm font-medium text-slate-800">{form.style}</p></div><div><p className="text-xs font-semibold uppercase tracking-wide text-slate-400">Format & deliverables</p><p className="mt-1 text-sm font-medium text-slate-800">{form.aspectRatio} Â· {form.deliverables || 'Not specified'}</p></div><div><p className="text-xs font-semibold uppercase tracking-wide text-slate-400">Budget</p><p className="mt-1 text-sm font-medium text-slate-800">{form.budget ? `â‚¹${Number(form.budget).toLocaleString('en-IN')}` : 'Not provided'}</p></div><div><p className="text-xs font-semibold uppercase tracking-wide text-slate-400">Deadline</p><p className="mt-1 text-sm font-medium text-slate-800">{form.deadline || 'Not provided'}</p></div></div>
+                <div className="mt-5 grid gap-4 border-t border-slate-100 pt-4 sm:grid-cols-2"><div><p className="text-xs font-semibold uppercase tracking-wide text-slate-400">Audience</p><p className="mt-1 text-sm font-medium text-slate-800">{form.audience || 'Not provided'}</p></div><div><p className="text-xs font-semibold uppercase tracking-wide text-slate-400">Content type</p><p className="mt-1 text-sm font-medium text-slate-800">{form.contentType}</p></div><div><p className="text-xs font-semibold uppercase tracking-wide text-slate-400">Visual direction</p><p className="mt-1 text-sm font-medium text-slate-800">{form.style}</p></div><div><p className="text-xs font-semibold uppercase tracking-wide text-slate-400">Format & deliverables</p><p className="mt-1 text-sm font-medium text-slate-800">{form.aspectRatio} · {form.deliverables || 'Not specified'}</p></div><div><p className="text-xs font-semibold uppercase tracking-wide text-slate-400">Budget</p><p className="mt-1 text-sm font-medium text-slate-800">{form.budget ? `?${Number(form.budget).toLocaleString('en-IN')}` : 'Not provided'}</p></div><div><p className="text-xs font-semibold uppercase tracking-wide text-slate-400">Deadline</p><p className="mt-1 text-sm font-medium text-slate-800">{form.deadline || 'Not provided'}</p></div></div>
 
                 {(form.mustHaves || form.avoid) && <div className="mt-4 grid gap-4 border-t border-slate-100 pt-4 sm:grid-cols-2">{form.mustHaves && <div><p className="text-xs font-semibold uppercase tracking-wide text-slate-400">Must-have</p><p className="mt-1 whitespace-pre-wrap text-sm text-slate-700">{form.mustHaves}</p></div>}{form.avoid && <div><p className="text-xs font-semibold uppercase tracking-wide text-slate-400">Avoid</p><p className="mt-1 whitespace-pre-wrap text-sm text-slate-700">{form.avoid}</p></div>}</div>}
 
@@ -744,7 +744,7 @@ export const DashboardBrand: React.FC = () => {
 
             <select aria-label="Filter by visual style" value={creatorStyle} onChange={e => setCreatorStyle(e.target.value)} className="rounded-xl border border-slate-300 px-3 py-2.5 text-sm"><option>All</option>{visualStyles.map(item => <option key={item.name}>{item.name}</option>)}</select>
 
-            <div><label className="mb-1 block text-xs font-semibold text-slate-500">Maximum project budget (â‚¹)</label><input type="number" min="0" value={maxBudget} onChange={e => setMaxBudget(e.target.value)} className="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm focus:border-violet-500 focus:ring-2 focus:ring-violet-100" /></div>
+            <div><label className="mb-1 block text-xs font-semibold text-slate-500">Maximum project budget (?)</label><input type="number" min="0" value={maxBudget} onChange={e => setMaxBudget(e.target.value)} className="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm focus:border-violet-500 focus:ring-2 focus:ring-violet-100" /></div>
 
           </div>
 
@@ -758,17 +758,17 @@ export const DashboardBrand: React.FC = () => {
 
             return <article key={creator.id} className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
 
-              <div className="flex items-start gap-3 p-5"><div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl text-sm font-extrabold ${creator.color}`}>{creator.initials}</div><div className="min-w-0 flex-1"><h3 className="font-bold text-slate-900">{creator.name}</h3><p className="mt-0.5 text-xs text-slate-500">{creator.location} Â· {creator.category}</p><span className="mt-2 inline-flex rounded-full bg-violet-50 px-2.5 py-1 text-xs font-semibold text-violet-700">{creator.style}</span></div><span className="whitespace-nowrap text-sm font-extrabold text-slate-900">â‚¹{creator.price.toLocaleString('en-IN')}</span></div>
+              <div className="flex items-start gap-3 p-5"><div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl text-sm font-extrabold ${creator.color}`}>{creator.initials}</div><div className="min-w-0 flex-1"><h3 className="font-bold text-slate-900">{creator.name}</h3><p className="mt-0.5 text-xs text-slate-500">{creator.location} · {creator.category}</p><span className="mt-2 inline-flex rounded-full bg-violet-50 px-2.5 py-1 text-xs font-semibold text-violet-700">{creator.style}</span></div><span className="whitespace-nowrap text-sm font-extrabold text-slate-900">?{creator.price.toLocaleString('en-IN')}</span></div>
 
               <div className="px-5 pb-4"><p className="text-sm leading-6 text-slate-600">{creator.bio}</p><p className="mt-3 text-xs text-slate-500">{creator.platforms}</p>
 
                 <div className="mt-4 rounded-xl bg-slate-50 p-3"><p className="text-xs font-bold uppercase tracking-wide text-slate-500">Portfolio samples</p><div className="mt-2 flex flex-wrap gap-1.5">{creator.portfolio.map(sample => <span key={sample} className="rounded-md border border-slate-200 bg-white px-2 py-1 text-xs text-slate-600">{sample}</span>)}</div></div>
 
-                {relatedBrief && <p className="mt-3 flex items-start gap-2 text-xs leading-5 text-emerald-700"><CheckCircle2 className="mt-0.5 h-3.5 w-3.5 shrink-0" />Possible fit: aligns with â€œ{relatedBrief.title}â€ by content type or visual style.</p>}
+                {relatedBrief && <p className="mt-3 flex items-start gap-2 text-xs leading-5 text-emerald-700"><CheckCircle2 className="mt-0.5 h-3.5 w-3.5 shrink-0" />Possible fit: aligns with “{relatedBrief.title}” by content type or visual style.</p>}
 
               </div>
 
-              <div className="border-t border-slate-100 p-4"><Button fullWidth variant={isShortlisted ? 'secondary' : 'outline'} onClick={() => setShortlisted(current => isShortlisted ? current.filter(id => id !== creator.id) : [...current, creator.id])}>{isShortlisted ? <><Check className="mr-2 h-4 w-4" />Shortlisted\</> : <><Plus className="mr-2 h-4 w-4" />Add to shortlist\</>}</Button></div>
+              <div className="border-t border-slate-100 p-4"><Button fullWidth variant={isShortlisted ? 'secondary' : 'outline'} onClick={() => setShortlisted(current => isShortlisted ? current.filter(id => id !== creator.id) : [...current, creator.id])}>{isShortlisted ? <><Check className="mr-2 h-4 w-4" />Shortlisted</> : <><Plus className="mr-2 h-4 w-4" />Add to shortlist</>}</Button></div>
 
             </article>;
 
@@ -788,10 +788,12 @@ export const DashboardBrand: React.FC = () => {
 
 
 
-      {import.meta.env.DEV && <p className="mt-8 text-xs text-slate-400">Prototype mode Â· {user?.id ? 'Authenticated session detected' : 'No user session detected'} Â· Demo briefs and shortlists are saved locally in this browser.</p>}
+      {import.meta.env.DEV && <p className="mt-8 text-xs text-slate-400">Prototype mode · {user?.id ? 'Authenticated session detected' : 'No user session detected'} · Demo briefs and shortlists are saved locally in this browser.</p>}
 
     </main>
 
   );
 
 };
+
+

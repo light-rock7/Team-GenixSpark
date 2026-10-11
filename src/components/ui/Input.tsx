@@ -24,16 +24,13 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(({
   return (
     <div className="w-full text-left">
       {label && (
-        <label
-          htmlFor={inputId}
-          className="block text-xs font-semibold uppercase tracking-wider text-slate-700 mb-1.5"
-        >
+        <label htmlFor={inputId} className="mb-2 block text-[13px] font-semibold tracking-[-0.01em] text-slate-800">
           {label}
         </label>
       )}
-      <div className="relative rounded-lg shadow-sm">
+      <div className="relative">
         {leftIcon && (
-          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+          <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
             {leftIcon}
           </div>
         )}
@@ -41,31 +38,25 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(({
           ref={ref}
           id={inputId}
           disabled={disabled}
-          className={`
-            block w-full rounded-lg border text-sm transition-colors duration-150
-            placeholder:text-slate-400
-            ${leftIcon ? 'pl-10' : 'pl-3.5'}
-            ${rightIcon ? 'pr-10' : 'pr-3.5'}
-            py-2.5
-            ${error
-              ? 'border-rose-400 text-rose-900 focus:border-rose-500 focus:ring-1 focus:ring-rose-500 bg-rose-50/30'
-              : 'border-slate-300 text-slate-900 focus:border-violet-500 focus:ring-2 focus:ring-violet-200 bg-white'
-            }
-            disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:cursor-not-allowed
-            ${className}
-          `}
+          className={`block w-full rounded-xl border bg-white py-3 text-sm text-slate-950 shadow-[0_1px_2px_rgba(15,23,42,.03)] outline-none transition-all placeholder:text-slate-400 ${
+            leftIcon ? 'pl-10' : 'pl-3.5'
+          } ${rightIcon ? 'pr-10' : 'pr-3.5'} ${
+            error
+              ? 'border-rose-300 focus:border-rose-400 focus:ring-4 focus:ring-rose-50'
+              : 'border-slate-200 hover:border-slate-300 focus:border-violet-400 focus:ring-4 focus:ring-violet-50'
+          } disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-500 ${className}`}
           {...props}
         />
         {rightIcon && (
-          <div className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400">
+          <div className="absolute inset-y-0 right-0 flex items-center pr-3.5 text-slate-400">
             {rightIcon}
           </div>
         )}
       </div>
       {error ? (
-        <p className="mt-1.5 text-xs text-rose-600 font-medium">{error}</p>
+        <p className="mt-1.5 text-xs font-medium text-rose-600">{error}</p>
       ) : helperText ? (
-        <p className="mt-1.5 text-xs text-slate-500">{helperText}</p>
+        <p className="mt-1.5 text-xs leading-relaxed text-slate-500">{helperText}</p>
       ) : null}
     </div>
   );
