@@ -21,6 +21,7 @@ import type { PortfolioItemCreate, PortfolioMediaType } from '../types/creator';
 const AI_TOOL_SUGGESTIONS = ['Midjourney', 'Stable Diffusion', 'Flux', 'ComfyUI', 'Runway', 'ChatGPT', 'DALL·E', 'Adobe Firefly'];
 const SKILL_SUGGESTIONS = ['Prompt Engineering', 'Art Direction', 'Image Generation', 'Video Generation', 'LoRA Training', 'Retouching', 'Storyboarding', 'Concept Design'];
 const CATEGORIES = ['Advertising', 'Product Visuals', 'Fashion', 'Beauty', 'Social Content', 'Concept Art', 'Architecture', 'Motion', 'Editorial', 'Other'];
+const CONTENT_TYPES = ['Image', 'Video', 'Animation', 'Graphics', 'Product Visuals', 'Social Content', 'Concept Art', 'Mixed Media', 'Other'];
 
 export const CreatorPortfolioNew: React.FC = () => {
   const navigate = useNavigate();
@@ -32,6 +33,7 @@ export const CreatorPortfolioNew: React.FC = () => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [category, setCategory] = useState('Advertising');
+  const [contentType, setContentType] = useState('Image');
   const [aiTools, setAiTools] = useState<string[]>([]);
   const [skills, setSkills] = useState<string[]>([]);
   const [promptSummary, setPromptSummary] = useState('');
@@ -41,9 +43,16 @@ export const CreatorPortfolioNew: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
 
   const readiness = useMemo(() => {
-    const checks = [Boolean(title.trim()), mediaMode === 'upload' ? Boolean(file) : Boolean(externalUrl.trim()), aiTools.length > 0, Boolean(workflowSummary.trim()), Boolean(description.trim())];
+    const checks = [
+      Boolean(title.trim()),
+      mediaMode === 'upload' ? Boolean(file) : Boolean(externalUrl.trim()),
+      Boolean(contentType),
+      aiTools.length > 0,
+      Boolean(workflowSummary.trim()),
+      Boolean(description.trim()),
+    ];
     return Math.round((checks.filter(Boolean).length / checks.length) * 100);
-  }, [title, mediaMode, file, externalUrl, aiTools, workflowSummary, description]);
+  }, [title, mediaMode, file, externalUrl, contentType, aiTools, workflowSummary, description]);
 
   const previewUrl = file && file.type.startsWith('image/') ? URL.createObjectURL(file) : null;
 
@@ -76,6 +85,7 @@ export const CreatorPortfolioNew: React.FC = () => {
         thumbnail_url: null,
         media_type: mediaType,
         category: category || null,
+        content_type: contentType || null,
         ai_tools: aiTools,
         skills,
         prompt_summary: promptSummary.trim() || null,
@@ -104,7 +114,7 @@ export const CreatorPortfolioNew: React.FC = () => {
           <div>
             <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-violet-600">New portfolio case study</p>
             <h1 className="mt-2 text-3xl font-extrabold tracking-[-0.045em] text-slate-950">Document the work and the workflow.</h1>
-            <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-500">Strong case studies are concise: show the output, name the tools, explain the production path, and clarify commercial context.</p>
+            <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-500">Strong case studies are concise: show the output, name the content type and tools, explain the production path, and clarify commercial context.</p>
           </div>
         </div>
 
@@ -162,6 +172,12 @@ export const CreatorPortfolioNew: React.FC = () => {
               <div className="mt-6 grid gap-4 sm:grid-cols-2">
                 <div className="sm:col-span-2"><Input label="Project title" value={title} onChange={(event) => setTitle(event.target.value)} placeholder="e.g. Luxury skincare launch visual system" maxLength={120} /></div>
                 <div>
+                  <label className="mb-2 block text-[13px] font-semibold text-slate-800">Content type</label>
+                  <select value={contentType} onChange={(event) => setContentType(event.target.value)} className="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-3 text-sm text-slate-950 outline-none hover:border-slate-300 focus:border-violet-400 focus:ring-4 focus:ring-violet-50">
+                    {CONTENT_TYPES.map((item) => <option key={item} value={item}>{item}</option>)}
+                  </select>
+                </div>
+                <div>
                   <label className="mb-2 block text-[13px] font-semibold text-slate-800">Category</label>
                   <select value={category} onChange={(event) => setCategory(event.target.value)} className="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-3 text-sm text-slate-950 outline-none hover:border-slate-300 focus:border-violet-400 focus:ring-4 focus:ring-violet-50">
                     {CATEGORIES.map((item) => <option key={item} value={item}>{item}</option>)}
@@ -204,6 +220,7 @@ export const CreatorPortfolioNew: React.FC = () => {
               <div className="mt-5 space-y-2.5 text-[11px] text-slate-300">
                 <p className="flex items-center gap-2"><CheckCircle2 className={`h-3.5 w-3.5 ${title.trim() ? 'text-emerald-300' : 'text-slate-600'}`} /> Clear project title</p>
                 <p className="flex items-center gap-2"><CheckCircle2 className={`h-3.5 w-3.5 ${(mediaMode === 'upload' ? file : externalUrl.trim()) ? 'text-emerald-300' : 'text-slate-600'}`} /> Strong visual proof</p>
+                <p className="flex items-center gap-2"><CheckCircle2 className={`h-3.5 w-3.5 ${contentType ? 'text-emerald-300' : 'text-slate-600'}`} /> Content type selected</p>
                 <p className="flex items-center gap-2"><CheckCircle2 className={`h-3.5 w-3.5 ${aiTools.length > 0 ? 'text-emerald-300' : 'text-slate-600'}`} /> Toolchain listed</p>
                 <p className="flex items-center gap-2"><CheckCircle2 className={`h-3.5 w-3.5 ${workflowSummary.trim() ? 'text-emerald-300' : 'text-slate-600'}`} /> Workflow summarized</p>
               </div>
