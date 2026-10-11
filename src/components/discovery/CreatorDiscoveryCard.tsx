@@ -65,7 +65,18 @@ export const CreatorDiscoveryCard: React.FC<CreatorDiscoveryCardProps> = ({ resu
         )}
       </div>
 
-      <div className="mt-5 border-t border-slate-100 pt-4">
+      {creator.content_types.length > 0 && (
+        <div className="mt-5 border-t border-slate-100 pt-4">
+          <p className="text-[9px] font-semibold uppercase tracking-[0.14em] text-slate-400">Portfolio content types</p>
+          <div className="mt-2.5 flex flex-wrap gap-1.5">
+            {creator.content_types.slice(0, 4).map((contentType) => (
+              <span key={contentType} className="rounded-full border border-slate-200 bg-slate-50 px-2.5 py-1 text-[9px] font-semibold text-slate-600">{contentType}</span>
+            ))}
+          </div>
+        </div>
+      )}
+
+      <div className={`${creator.content_types.length > 0 ? 'mt-4' : 'mt-5 border-t border-slate-100 pt-4'}`}>
         <p className="text-[9px] font-semibold uppercase tracking-[0.14em] text-slate-400">AI toolchain</p>
         <div className="mt-2.5 flex min-h-7 flex-wrap gap-1.5">
           {creator.ai_tools.length > 0 ? creator.ai_tools.slice(0, 4).map((tool) => (
