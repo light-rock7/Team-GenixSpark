@@ -244,6 +244,7 @@ export const createPortfolioItem = async (
       thumbnail_url: normalizeNullable(input.thumbnail_url),
       media_type: input.media_type,
       category: normalizeNullable(input.category),
+      content_type: normalizeNullable(input.content_type),
       ai_tools: input.ai_tools,
       skills: input.skills,
       prompt_summary: normalizeNullable(input.prompt_summary),
