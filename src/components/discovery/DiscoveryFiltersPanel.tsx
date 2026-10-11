@@ -10,7 +10,7 @@ interface DiscoveryFiltersPanelProps {
   onReset: () => void;
 }
 
-type ArrayFilterKey = 'aiTools' | 'skills' | 'specializations';
+type ArrayFilterKey = 'contentTypes' | 'aiTools' | 'skills' | 'specializations';
 
 const SectionTitle: React.FC<{ children: React.ReactNode }> = ({ children }) => (
   <p className="text-[11px] font-semibold text-slate-700">{children}</p>
@@ -34,7 +34,7 @@ export const DiscoveryFiltersPanel: React.FC<DiscoveryFiltersPanelProps> = ({
 
   const renderOptions = (key: ArrayFilterKey, values: string[]) => {
     if (values.length === 0) {
-      return <p className="mt-2 text-[10px] leading-4 text-slate-400">Options appear as creators complete their profiles.</p>;
+      return <p className="mt-2 text-[10px] leading-4 text-slate-400">Options appear as creators publish matching portfolio evidence.</p>;
     }
 
     return (
@@ -77,6 +77,11 @@ export const DiscoveryFiltersPanel: React.FC<DiscoveryFiltersPanelProps> = ({
             <RotateCcw className="h-3 w-3" /> Reset
           </button>
         )}
+      </div>
+
+      <div className="mt-5 border-t border-slate-100 pt-5">
+        <SectionTitle>Content type</SectionTitle>
+        {renderOptions('contentTypes', options.contentTypes)}
       </div>
 
       <div className="mt-5 border-t border-slate-100 pt-5">
