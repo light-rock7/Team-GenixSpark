@@ -2,72 +2,66 @@
 
 **Live application:** https://genixspark.vercel.app  
 **Submission repository:** https://github.com/light-rock7/Team-GenixSpark  
-**Final implementation branch:** `feature/stage7-final-polish`
+**Submission branch:** `main`
 
-GenixSpark is a two-sided marketplace built specifically for **generative-AI creators and brands/agencies**. It helps brands evaluate creators using real capability signals — portfolio evidence, AI tools, workflow context, specializations, structured brief requirements, and explainable fit reasons — instead of treating AI creative work like generic freelancing.
+GenixSpark is an AI-native marketplace connecting **generative-AI creators** with **brands and creative agencies**. It is built around the signals traditional freelance marketplaces usually miss: AI tools/models, content types, skills, specializations, workflow evidence, commercial-use context, structured creative briefs, and explainable creator-to-brief fit.
 
-The completed MVP supports the full marketplace journey:
+The MVP supports the full marketplace journey:
 
-**Creator profile → AI portfolio → creator discovery → structured brand brief → explainable matching → application → brand review → shortlist/reject → award → creator application tracking**
+**Creator profile → AI portfolio → creator discovery → AI-assisted structured brief → explainable matching → application → brand review → shortlist/reject → award → application tracking**
 
-It also includes an **AI Creator Copilot** that audits creator positioning and suggests reviewable profile improvements without inventing skills, clients, results, or experience.
+It also includes two review-before-apply AI experiences:
 
----
-
-## Why GenixSpark exists
-
-Traditional freelance marketplaces usually show a profile, price, and final portfolio output. That is not enough for generative-AI work.
-
-A brand may need to know:
-
-- Which AI tools does this creator actually use?
-- Can they work with Midjourney, Stable Diffusion, Flux, ComfyUI, Runway, ChatGPT, or a specific workflow?
-- Does their portfolio prove the required capability?
-- How was the work produced?
-- Does the creator match this brief because of explicit requirements, or because of an unexplained ranking score?
-
-GenixSpark makes those signals part of the marketplace itself.
-
-### Key differentiation
-
-GenixSpark is **not a generic freelancer directory with an AI label**.
-
-Its differentiation is:
-
-1. **AI-workflow transparency** — profiles and case studies expose tools, skills, workflow summaries, prompt direction, and rights context.
-2. **Portfolio-backed capability proof** — brands can inspect evidence instead of relying only on self-declared tags.
-3. **Structured creative briefs** — brands define requirements in a format that can be matched consistently.
-4. **Explainable discovery** — fit is based on explicit criteria with human-readable reasons rather than an opaque AI score.
-5. **Safe AI assistance** — Creator Copilot recommends improvements but does not invent claims or silently modify creator data.
+- **AI Creator Copilot** — helps creators improve profile and portfolio positioning without inventing claims.
+- **AI-Assisted Brief Builder** — converts a brand's rough creative idea into a structured draft covering content type, style, format, deliverables, tools, skills and other brief signals for human review.
 
 ---
 
-# Evaluation guide
+# Challenge fit / evaluation guide
 
-The project was designed around the hackathon evaluation areas below so an evaluator can quickly map product behavior to implemented functionality.
+## 1. Creator Profiles & AI Portfolios — 30%
 
-## 1. Creator Profiles & AI Portfolios
+Creators build AI-specific profiles rather than generic freelancer profiles.
 
-Creators can build an AI-specific professional identity instead of a generic freelancer profile.
-
-Implemented capabilities include:
+Implemented profile signals include:
 
 - professional headline and bio
+- AI tools/models
 - skills
-- AI tools
 - specializations
-- availability and rate information
-- links and avatar upload
+- availability
+- years of experience
+- rates
+- links
+- avatar upload
 - public creator profile
-- portfolio case studies
-- case-study media
-- AI tool and skill metadata
-- prompt-direction summary
+
+AI portfolio case studies include:
+
+- image, video or external work
+- **explicit content type**
+- project category
+- tools/models used
+- skills demonstrated
+- prompt / creative-direction summary
 - workflow summary
 - commercial-rights context
-- draft / publish controls
+- draft / published state
 
-Portfolio items are designed to show **how the creator works**, not only the final visual output.
+This lets a brand evaluate both the output and **how the creator produced it**.
+
+### Trust / verification signals
+
+GenixSpark uses visible evidence-based trust signals rather than claiming unsupported certification:
+
+- published portfolio proof
+- toolchain metadata tied to case studies
+- workflow summaries
+- skills demonstrated in work
+- content-type evidence
+- commercial-rights context
+
+These are **verification signals for evaluation**, not a claim that GenixSpark independently certifies every tool or project.
 
 Relevant routes:
 
@@ -79,59 +73,43 @@ Relevant routes:
 
 ---
 
-## 2. Discovery & Filtering
+## 2. Brief Definition — 20%
 
-Brands can discover creators using signals that matter for generative-AI work.
+Brands can create complete, structured creative briefs with explicit fields matching the challenge requirements.
 
-Implemented discovery includes:
+Briefs capture:
 
-- creator search
-- AI-tool filters
-- skill filters
-- specialization filters
-- sorting
-- portfolio-backed creator cards
-- deterministic fit logic
-- human-readable fit reasons
-
-### Explainable matching
-
-GenixSpark intentionally avoids fake or opaque AI ranking claims.
-
-Matching is derived from explicit creator and brief data such as:
-
+- campaign / project context
+- **content type**
+- **creative style / mood**
+- category
+- deliverables
+- format / aspect ratio
 - required AI tools
 - required skills
-- creator specializations
-- portfolio evidence
-- brief criteria
-
-If no meaningful criteria exist, the product does not manufacture an artificial match score.
-
-Relevant route:
-
-- `/marketplace`
-
----
-
-## 3. Brief Definition
-
-Brands can create structured creative briefs instead of posting an unstructured text request.
-
-Briefs support:
-
-- campaign/project information
-- deliverables
-- required skills
-- preferred / required AI tools
-- specializations
-- budget/context
-- deadline information
-- rights expectations
-- readiness feedback
+- budget range
+- deadline
+- commercial / usage-rights requirements
+- references and production notes
 - draft / open / closed / awarded lifecycle
+- brief-readiness feedback
 
-This structured data becomes the basis for creator discovery and explainable fit.
+### Bonus: AI-Assisted Brief Builder
+
+The brand brief page includes an AI builder that accepts a rough idea and proposes a structured brief containing:
+
+- title and description
+- content type
+- creative style
+- category
+- likely tools and skills
+- deliverables
+- aspect ratio
+- usage-rights information only when supported by the brand's input
+- production / reference notes
+- assumptions the brand should verify
+
+The generated draft is **previewed first**. It only fills empty fields after the brand explicitly chooses to apply it. It does not silently set budget, deadline or unsupported legal/commercial terms.
 
 Relevant routes:
 
@@ -141,17 +119,106 @@ Relevant routes:
 
 ---
 
-## 4. Applications & Award Workflow
+## 3. Discovery & Filtering — 25%
 
-The marketplace supports the workflow after discovery, not just browsing.
+Brands can search and filter creators using AI-native capability signals.
+
+Implemented discovery includes:
+
+- free-text creator search
+- **content-type filter backed by published portfolio evidence**
+- AI-tool filter
+- skills filter
+- specialization filter
+- availability filter
+- minimum-experience filter
+- best-fit / experience / newest sorting
+- responsive desktop/mobile filter UI
+- dedicated empty-results state with reset guidance
+
+### Explainable matching
+
+GenixSpark intentionally avoids an opaque or fabricated "AI score".
+
+When criteria are active, fit is calculated deterministically from explicit signals such as:
+
+- selected content type
+- required tools
+- required skills
+- specializations
+- availability
+- experience
+- search relevance
+
+The UI shows human-readable reasons such as matched content type, tools, skills or experience. If no meaningful criteria exist, GenixSpark does **not** manufacture a match percentage.
+
+A brief can pass its content type, required tools, skills and category directly into creator discovery.
+
+Relevant route:
+
+- `/marketplace`
+
+---
+
+## 4. User Experience — 15%
+
+The MVP has separate creator and brand workflows with protected routing and role-aware navigation.
+
+Creator flow:
+
+**Sign up / sign in → profile → portfolio → Copilot → opportunities → proposal → application tracking**
+
+Brand flow:
+
+**Sign up / sign in → AI-assisted brief → publish brief → matching discovery → applicant review → shortlist/reject/accept → award**
+
+UX resilience includes:
+
+- responsive layouts
+- loading states
+- empty states
+- recoverable error states
+- route-level error boundary
+- useful 404 page
+- protected-route return after login
+- nested-route refresh support on Vercel
+
+---
+
+## 5. Presentation & Demo — 10%
+
+Production URL:
+
+https://genixspark.vercel.app
+
+Recommended evaluator journey:
+
+1. Open the marketplace and inspect search/filter behavior.
+2. Open a creator profile and portfolio to inspect AI tools, content type, workflow and rights evidence.
+3. Sign in as a Brand and open `/brand/briefs/new`.
+4. Enter a rough campaign idea into **AI-Assisted Brief Builder**.
+5. Review the generated assumptions and apply the suggestion to empty fields.
+6. Confirm content type, style, format/aspect ratio and commercial-use fields.
+7. Publish the brief and open **Find matching creators**.
+8. Inspect the content-type filter and explainable fit reasons.
+9. Sign in as a Creator and use Creator Copilot.
+10. Apply to an opportunity and track the application.
+11. Return as the Brand to review, shortlist/reject/accept and award.
+
+A timed demo script is available in `docs/demo-runbook.md`.
+
+---
+
+# Additional marketplace workflow
+
+Beyond the minimum challenge scope, GenixSpark supports the engagement funnel after discovery.
 
 Creators can:
 
-- browse open opportunities
-- evaluate brief fit
-- submit a proposal
-- track application status
-- see shortlist / rejection / acceptance states
+- browse open briefs
+- evaluate fit
+- submit proposals
+- track pending / shortlisted / rejected / accepted states
 
 Brands can:
 
@@ -170,31 +237,26 @@ Relevant routes:
 
 ---
 
-## 5. AI Creator Copilot
+# AI Creator Copilot
 
-GenixSpark includes a server-side AI assistant for creators.
-
-The Copilot reads the creator's existing profile and portfolio context and can:
+Creator Copilot reads the creator's real profile and portfolio context and can:
 
 - identify profile gaps
-- identify portfolio-proof gaps
-- suggest stronger positioning
-- recommend clearer skills / tools / specialization presentation
+- identify missing portfolio proof
+- improve positioning
+- recommend clearer tool / skill / specialization presentation
 - propose reviewable profile patches
 
-### Safety and trust behavior
+Safety constraints include:
 
-The Copilot is intentionally constrained:
+- no invented skills
+- no invented clients
+- no invented project outcomes
+- no invented awards or metrics
+- warnings around proprietary prompts and confidential material
+- explicit review before profile changes are applied
 
-- it must not invent skills
-- it must not invent clients
-- it must not invent project outcomes
-- it must not invent awards, metrics, or experience
-- it warns against exposing proprietary prompts or confidential material
-- suggestions are reviewable before application
-- creator data changes only after explicit approval
-
-The AI call runs through a **Supabase Edge Function**, keeping the Groq API key server-side.
+The Groq API key stays inside Supabase Edge Function secrets and is never exposed to the browser.
 
 Relevant route:
 
@@ -202,57 +264,18 @@ Relevant route:
 
 ---
 
-# End-to-end demo flow
-
-A reviewer can evaluate the completed MVP using this sequence:
-
-1. Open the landing page and marketplace.
-2. Inspect a public creator profile and AI portfolio case studies.
-3. Sign in as a Brand.
-4. Create or open a structured creative brief.
-5. Open creator discovery with relevant brief criteria.
-6. Inspect explainable fit reasons rather than an opaque ranking score.
-7. Sign in as a Creator.
-8. Open Creator Copilot and review profile/portfolio recommendations.
-9. Browse open opportunities and submit an application.
-10. Return as the Brand and review the applicant.
-11. Shortlist, reject, or accept the creator.
-12. Award the brief.
-13. Return as the Creator and verify the accepted application state.
-
-A timed hackathon script is available in `docs/demo-runbook.md`.
-
----
-
-# Product capabilities
-
-- **Authentication & roles** — Supabase email/password authentication, Creator/Brand role provisioning, protected routing, intended-route return after login.
-- **Creator profiles** — AI-focused identity, skills, tools, specializations, availability, rates, links, avatar, public profile.
-- **AI portfolios** — workflow-aware case studies with media, tool/skill metadata, prompt summary, workflow summary, rights context, publish controls.
-- **Creator discovery** — search, filters, sorting, deterministic fit, explainable match reasons.
-- **Creative briefs** — structured requirements and draft/open/closed/awarded lifecycle.
-- **Creator Copilot** — AI-assisted profile and portfolio guidance with review-before-apply behavior and non-invention rules.
-- **Applications pipeline** — proposals, tracking, applicant review, shortlist/reject/accept, award state.
-- **UX resilience** — responsive layouts, loading/empty/error states, route-level error recovery, 404 recovery, SPA refresh support.
-- **Security** — Supabase RLS, role-aware access, publishable browser key only, server-side AI secret handling.
-
----
-
 # Architecture
 
 ```text
-Browser / React + TypeScript + Vite
+React + TypeScript + Vite browser app
             |
             | Supabase JS client
             v
 Supabase Auth + PostgreSQL + RLS + Storage
             |
-            | authenticated Edge Function call
-            v
-Creator Copilot Edge Function
+            +--> creator-copilot Edge Function ------> Groq model API
             |
-            v
-Groq model API
+            +--> brand-brief-builder Edge Function -> Groq model API
 ```
 
 ### Frontend
@@ -271,42 +294,20 @@ Groq model API
 - Row Level Security
 - Supabase Storage
 - Supabase Edge Functions
-- Groq API for Creator Copilot
+- Groq API for the two AI-assistance workflows
 
 ### Deployment / quality
 
 - Vercel
 - npm with committed `package-lock.json`
 - GitHub Actions CI
-- `npm run check` = lint + production build
+- `npm run check` = lint + TypeScript production build + Vite build
 
 ---
 
-# Main routes
+# Data model note
 
-| Route | Purpose |
-| --- | --- |
-| `/` | Marketplace landing page |
-| `/auth` | Sign in / create account |
-| `/marketplace` | Creator discovery |
-| `/dashboard/creator` | Creator studio overview |
-| `/creator/profile` | Edit creator profile |
-| `/creator/copilot` | AI Creator Copilot |
-| `/creator/portfolio` | Manage portfolio |
-| `/creator/portfolio/new` | Add case study |
-| `/creators/:id` | Public creator profile |
-| `/opportunities` | Open brief opportunities for creators |
-| `/creator/applications` | Creator application tracking |
-| `/dashboard/brand` | Brand workspace |
-| `/brand/briefs/new` | Create brief |
-| `/briefs/:id` | Brief detail |
-| `/briefs/:id/applications` | Application / applicant review workflow |
-
----
-
-# Data model
-
-The MVP uses these core application tables:
+Core tables:
 
 - `user_profiles`
 - `creator_profiles`
@@ -315,13 +316,59 @@ The MVP uses these core application tables:
 - `creative_briefs`
 - `applications`
 
-Database changes are versioned in `supabase/migrations/`, currently through:
+Key AI-native fields include:
+
+### Creator / portfolio
+
+- `skills[]`
+- `ai_tools[]`
+- `specializations[]`
+- `portfolio_items.content_type`
+- `portfolio_items.category`
+- `portfolio_items.prompt_summary`
+- `portfolio_items.workflow_summary`
+- `portfolio_items.commercial_rights`
+
+### Brief
+
+- `creative_briefs.content_type`
+- `creative_briefs.style`
+- `creative_briefs.aspect_ratio`
+- `creative_briefs.required_tools[]`
+- `creative_briefs.required_skills[]`
+- `creative_briefs.deliverables`
+- `creative_briefs.usage_rights`
+- budget / deadline / reference fields
+
+Database changes are versioned in `supabase/migrations/` through:
 
 ```text
-010_application_brief_visibility.sql
+012_portfolio_content_type.sql
 ```
 
-Row Level Security remains enabled and is the primary authorization boundary for user-owned marketplace data.
+Row Level Security is the primary authorization boundary for marketplace data.
+
+---
+
+# Main routes
+
+| Route | Purpose |
+| --- | --- |
+| `/` | Landing page |
+| `/auth` | Sign in / create account |
+| `/marketplace` | Creator discovery and filtering |
+| `/dashboard/creator` | Creator studio |
+| `/creator/profile` | Edit creator profile |
+| `/creator/copilot` | AI Creator Copilot |
+| `/creator/portfolio` | Manage AI portfolio |
+| `/creator/portfolio/new` | Add workflow-backed case study |
+| `/creators/:id` | Public creator profile |
+| `/opportunities` | Open briefs for creators |
+| `/creator/applications` | Creator application tracking |
+| `/dashboard/brand` | Brand workspace |
+| `/brand/briefs/new` | Structured brief + AI Brief Builder |
+| `/briefs/:id` | Brief detail and matching launch |
+| `/briefs/:id/applications` | Applicant review workflow |
 
 ---
 
@@ -333,35 +380,41 @@ Row Level Security remains enabled and is the primary authorization boundary for
 npm ci
 ```
 
-## 2. Configure frontend environment
+## 2. Frontend environment
 
-Copy `.env.example` to `.env.local` and provide browser-safe Supabase credentials only:
+Copy `.env.example` to `.env.local` and use browser-safe Supabase credentials only:
 
 ```env
 VITE_SUPABASE_URL=https://YOUR_PROJECT.supabase.co
 VITE_SUPABASE_PUBLISHABLE_KEY=sb_publishable_...
 ```
 
-Never expose a Supabase service-role/secret key, database password, Groq key, or access token through a `VITE_*` variable.
+Never expose a Supabase service-role/secret key, database password, Groq key or access token through a `VITE_*` variable.
 
-## 3. Apply database migrations
+## 3. Apply migrations
 
-Apply migrations from `supabase/migrations/` in order.
+```bash
+npx supabase@latest link --project-ref YOUR_PROJECT_REF
+npx supabase@latest db push
+```
 
-## 4. Configure Creator Copilot
+## 4. Configure AI Edge Functions
 
 Keep AI credentials server-side:
 
 ```bash
-npx supabase@latest link --project-ref YOUR_PROJECT_REF
 npx supabase@latest secrets set GROQ_API_KEY="YOUR_GROQ_API_KEY"
 npx supabase@latest secrets set GROQ_MODEL="openai/gpt-oss-120b"
-npx supabase@latest functions deploy creator-copilot --no-verify-jwt
 ```
 
-The Edge Function performs authenticated-user and Creator-role checks internally.
+Deploy both AI workflows:
 
-See `STAGE5_COPILOT_SETUP.md` for detailed setup notes.
+```bash
+npx supabase@latest functions deploy creator-copilot --no-verify-jwt
+npx supabase@latest functions deploy brand-brief-builder --no-verify-jwt
+```
+
+Both functions perform their own authenticated-user and role checks internally.
 
 ## 5. Run locally
 
@@ -375,13 +428,6 @@ npm run dev
 npm run check
 ```
 
-Equivalent to:
-
-```bash
-npm run lint
-npm run build
-```
-
 ---
 
 # Production deployment
@@ -390,20 +436,18 @@ Production application:
 
 https://genixspark.vercel.app
 
-Vercel environment variables:
+Vercel browser environment variables:
 
 ```text
 VITE_SUPABASE_URL
 VITE_SUPABASE_PUBLISHABLE_KEY
 ```
 
-`GROQ_API_KEY` must **not** be added to Vercel because it belongs in Supabase Edge Function secrets.
+`GROQ_API_KEY` belongs in Supabase Edge Function secrets, **not** Vercel frontend environment variables.
 
-The repository includes `vercel.json` so React Router nested paths resolve to `index.html` when refreshed directly.
+The repository includes `vercel.json` so React Router nested paths resolve correctly when refreshed directly.
 
-## Supabase Auth URLs
-
-For production, configure Supabase Authentication URL settings with the deployed frontend domain, including:
+Supabase Auth production configuration should include:
 
 ```text
 Site URL:
@@ -415,35 +459,36 @@ https://genixspark.vercel.app/auth/callback
 
 ---
 
-# Security & trust model
+# Security & AI trust model
 
 - Only Supabase publishable credentials are used in browser code.
-- Backend secrets remain server-side.
-- RLS protects user-owned marketplace records.
-- Protected routes enforce role-aware application access.
-- Creator Copilot authenticates the caller before processing profile context.
-- AI output is treated as a suggestion, not trusted source-of-truth data.
-- AI suggestions are not silently written to creator profiles.
-- Proprietary prompts, confidential client information, and secret keys should never be entered into the Copilot.
-- `.env.local` and production secrets must not be committed.
+- Backend AI secrets remain server-side.
+- Supabase RLS protects user-owned marketplace records.
+- Protected routes enforce Creator / Brand role access.
+- Both AI Edge Functions authenticate the caller and enforce the expected role.
+- AI output is treated as a suggestion, not ground truth.
+- AI suggestions are shown for human review before being applied.
+- The Creator Copilot is constrained against inventing capabilities or results.
+- The Brief Builder does not invent budgets, deadlines or unsupported commercial/legal terms.
+- Proprietary prompts, confidential client information and secrets should not be entered into AI assistants.
 
 ---
 
 # Known MVP boundary
 
-The current application-award flow is implemented as a client-side multi-step operation suitable for the hackathon MVP. A production version should move the complete award transition into a transactional database RPC or server-side function so all related writes succeed or fail atomically.
+The application-award transition is currently a client-side multi-step flow suitable for a hackathon prototype. A production version should move the complete award transition into a transactional database RPC or server-side function so related writes succeed or fail atomically.
 
 ---
 
 # Documentation
 
 - `docs/backend-setup.md` — backend setup notes
-- `STAGE5_COPILOT_SETUP.md` — Creator Copilot deployment
-- `docs/demo-runbook.md` — timed demo script and final release checks
+- `STAGE5_COPILOT_SETUP.md` — Creator Copilot setup
+- `docs/demo-runbook.md` — timed demo and release checks
 - `docs/submission-checklist.md` — submission readiness checklist
 
 ---
 
 ## One-sentence evaluator summary
 
-**GenixSpark is an end-to-end generative-AI creator marketplace that combines workflow-aware creator portfolios, structured brand briefs, deterministic explainable matching, a complete application/award pipeline, and a safety-constrained AI Creator Copilot on top of Supabase-backed role security.**
+**GenixSpark is an end-to-end AI creator marketplace combining AI-workflow-aware portfolios, explicit content-type discovery, structured briefs with style/format/commercial-use fields, deterministic explainable matching, an AI-Assisted Brief Builder, a safety-constrained Creator Copilot, and a complete application/award workflow on Supabase-backed role security.**
