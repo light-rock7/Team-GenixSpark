@@ -10,6 +10,7 @@ import type { DiscoverySort } from '../types/discovery';
 export const Marketplace: React.FC = () => {
   const [searchParams] = useSearchParams();
   const initialFilters = useMemo(() => ({
+    contentTypes: searchParams.getAll('content_type'),
     aiTools: searchParams.getAll('tool'),
     skills: searchParams.getAll('skill'),
     specializations: searchParams.getAll('specialization'),
@@ -45,7 +46,7 @@ export const Marketplace: React.FC = () => {
                 Find creators by the work they can actually deliver.
               </h1>
               <p className="mt-4 max-w-2xl text-sm leading-6 text-slate-400 sm:text-base">
-                Search AI creators by toolchain, creative skill, specialization, availability and experience. Match percentages are deterministic and based only on the criteria you select.
+                Search AI creators by content type, toolchain, creative skill, specialization, availability and experience. Match percentages are deterministic and based only on the criteria you select.
               </p>
             </div>
 
@@ -58,7 +59,7 @@ export const Marketplace: React.FC = () => {
                 <Users className="h-6 w-6 text-violet-300" />
               </div>
               <div className="mt-4 border-t border-white/10 pt-4 text-[11px] leading-5 text-slate-400">
-                Profiles are ranked by selected criteria when filters are active, otherwise by marketplace readiness signals.
+                Content types come from published portfolio evidence; profile attributes supply the remaining matching signals.
               </div>
             </div>
           </div>
@@ -69,7 +70,7 @@ export const Marketplace: React.FC = () => {
         {briefContext && (
           <div className="mb-5 flex items-start gap-3 rounded-[18px] border border-violet-200 bg-violet-50 px-4 py-3.5 text-xs text-violet-800">
             <Sparkles className="mt-0.5 h-4 w-4 shrink-0" />
-            <div><p className="font-semibold">Brief requirements applied to discovery</p><p className="mt-1 text-[10px] leading-5 text-violet-600">Required tools, skills and category from the creative brief are now explicit filters. Fit scores explain overlap with those requirements.</p></div>
+            <div><p className="font-semibold">Brief requirements applied to discovery</p><p className="mt-1 text-[10px] leading-5 text-violet-600">Content type, required tools, skills and category from the creative brief are now explicit filters. Fit scores explain overlap with those requirements.</p></div>
           </div>
         )}
 
@@ -79,7 +80,7 @@ export const Marketplace: React.FC = () => {
             <input
               value={filters.query}
               onChange={(event) => setFilters({ ...filters, query: event.target.value })}
-              placeholder="Search creator, tool, skill, location or specialization..."
+              placeholder="Search creator, content type, tool, skill, location or specialization..."
               className="h-12 w-full rounded-2xl border border-slate-200 bg-white pl-11 pr-4 text-sm text-slate-950 shadow-sm outline-none placeholder:text-slate-400 focus:border-violet-400 focus:ring-4 focus:ring-violet-50"
             />
           </label>
@@ -121,7 +122,7 @@ export const Marketplace: React.FC = () => {
               <div>
                 <p className="text-sm font-semibold text-slate-950">{loading ? 'Finding creators…' : `${results.length} creator${results.length === 1 ? '' : 's'} found`}</p>
                 <p className="mt-1 text-[10px] text-slate-400">
-                  {activeFilterCount > 0 ? 'Fit scores explain how selected criteria overlap with each creator profile.' : 'Add filters to compare creators against explicit requirements.'}
+                  {activeFilterCount > 0 ? 'Fit scores explain how selected criteria overlap with each creator profile and published portfolio.' : 'Add filters to compare creators against explicit requirements.'}
                 </p>
               </div>
               {activeFilterCount > 0 && (
@@ -145,7 +146,7 @@ export const Marketplace: React.FC = () => {
               <div className="mt-6 rounded-[24px] border border-dashed border-slate-300 bg-white px-6 py-14 text-center">
                 <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-violet-50 text-violet-700"><Search className="h-5 w-5" /></div>
                 <h2 className="mt-4 text-base font-semibold text-slate-950">No creators match every active filter</h2>
-                <p className="mx-auto mt-2 max-w-md text-xs leading-5 text-slate-500">Try broadening one tool, skill, availability or experience requirement.</p>
+                <p className="mx-auto mt-2 max-w-md text-xs leading-5 text-slate-500">Try broadening one content type, tool, skill, availability or experience requirement.</p>
                 <button type="button" onClick={resetFilters} className="mt-4 text-xs font-semibold text-violet-700 hover:text-violet-800">Reset filters</button>
               </div>
             ) : (
