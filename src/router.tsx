@@ -7,6 +7,7 @@ import { DashboardCreator } from './pages/DashboardCreator';
 import { DashboardBrand } from './pages/DashboardBrand';
 import { NotFound } from './pages/NotFound';
 import { ProtectedRoute, DashboardEntry } from './components/auth/ProtectedRoute';
+import { BrandProfile } from './pages/BrandProfile';
 
 export const router = createBrowserRouter([
   {
@@ -41,6 +42,14 @@ export const router = createBrowserRouter([
           </ProtectedRoute>
         ),
       },
+      {
+  path: 'dashboard/brand/profile',
+  element: (
+    <ProtectedRoute allowedRole="brand">
+      <BrandProfile />
+    </ProtectedRoute>
+  ),
+},
       {
         path: '*',
         element: <NotFound />,

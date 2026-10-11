@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Mail, Lock, User, Sparkles, Briefcase, AlertCircle, CheckCircle2 } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
 import type { UserRole } from '../../lib/supabase';
@@ -12,11 +12,12 @@ interface SignupFormProps {
 
 export const SignupForm: React.FC<SignupFormProps> = ({ onToggleMode }) => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+const initialRole = searchParams.get('role') === 'brand' ? 'brand' : 'creator';
   const { signup, isConfigured } = useAuth();
 
   const [displayName, setDisplayName] = useState('');
-  const [role, setRole] = useState<UserRole>('creator');
-  const [email, setEmail] = useState('');
+const [role, setRole] = useState<UserRole>(initialRole);  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
