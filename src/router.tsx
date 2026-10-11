@@ -18,7 +18,11 @@ import { BriefDetail } from './pages/BriefDetail';
 import { BriefApplications } from './pages/BriefApplications';
 import { NotFound } from './pages/NotFound';
 import { RouteError } from './pages/RouteError';
-import { ProtectedRoute, DashboardEntry } from './components/auth/ProtectedRoute';
+import {
+  ProtectedRoute,
+  DashboardEntry,
+} from './components/auth/ProtectedRoute';
+import { BrandProfile } from './pages/BrandProfile';
 
 export const router = createBrowserRouter([
   {
@@ -119,6 +123,14 @@ export const router = createBrowserRouter([
         element: (
           <ProtectedRoute allowedRole="brand">
             <DashboardBrand />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: 'dashboard/brand/profile',
+        element: (
+          <ProtectedRoute allowedRole="brand">
+            <BrandProfile />
           </ProtectedRoute>
         ),
       },
