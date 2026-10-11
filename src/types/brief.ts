@@ -6,6 +6,8 @@ export interface CreativeBrief {
   title: string;
   description: string;
   category: string | null;
+  content_type: string | null;
+  style: string | null;
   required_tools: string[];
   required_skills: string[];
   deliverables: string | null;
@@ -25,6 +27,8 @@ export interface CreativeBriefCreate {
   title: string;
   description: string;
   category: string | null;
+  content_type: string | null;
+  style: string | null;
   required_tools: string[];
   required_skills: string[];
   deliverables: string | null;
@@ -43,4 +47,23 @@ export interface BriefReadiness {
   completed: number;
   total: number;
   missing: string[];
+}
+
+export interface BriefBuilderSuggestion {
+  title: string;
+  description: string;
+  category: string | null;
+  content_type: string | null;
+  style: string | null;
+  required_tools: string[];
+  required_skills: string[];
+  deliverables: string | null;
+  aspect_ratio: string | null;
+  usage_rights: string | null;
+  reference_notes: string | null;
+}
+
+export interface BriefBuilderResponse {
+  suggestion: BriefBuilderSuggestion;
+  assumptions: string[];
 }
