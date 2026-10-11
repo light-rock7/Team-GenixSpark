@@ -49,6 +49,7 @@ export const BriefDetail: React.FC = () => {
   const marketplaceSearch = useMemo(() => {
     if (!brief) return '';
     const params = new URLSearchParams();
+    if (brief.content_type) params.append('content_type', brief.content_type);
     brief.required_tools.forEach((tool) => params.append('tool', tool));
     brief.required_skills.forEach((skill) => params.append('skill', skill));
     if (brief.category) params.append('specialization', brief.category);
@@ -97,10 +98,12 @@ export const BriefDetail: React.FC = () => {
             <div>
               <div className="flex flex-wrap items-center gap-2.5">
                 <span className={`rounded-full border px-3 py-1.5 text-[9px] font-bold uppercase tracking-[0.13em] ${statusClass[brief.status]}`}>{brief.status}</span>
+                {brief.content_type && <span className="rounded-full bg-violet-50 px-2.5 py-1 text-[10px] font-semibold text-violet-700">{brief.content_type}</span>}
                 {brief.category && <span className="text-xs font-semibold text-slate-400">{brief.category}</span>}
               </div>
               <h1 className="mt-4 max-w-3xl text-3xl font-semibold tracking-[-0.04em] text-slate-950 sm:text-4xl">{brief.title}</h1>
               <p className="mt-4 max-w-3xl whitespace-pre-line text-sm leading-7 text-slate-600">{brief.description}</p>
+              {brief.style && <p className="mt-4 max-w-3xl text-xs leading-6 text-slate-500"><span className="font-semibold text-slate-800">Creative style:</span> {brief.style}</p>}
             </div>
 
             <aside className="rounded-[22px] bg-[#0b1020] p-6 text-white shadow-[0_18px_45px_rgba(15,23,42,.12)]">
@@ -127,7 +130,7 @@ export const BriefDetail: React.FC = () => {
         <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
           <div className="space-y-5">
             <section className="surface-card rounded-[22px] p-5 sm:p-7">
-              <div className="flex items-center gap-3"><div className="flex h-9 w-9 items-center justify-center rounded-xl bg-violet-50 text-violet-700"><WandSparkles className="h-4 w-4" /></div><div><h2 className="text-sm font-semibold text-slate-950">Capability requirements</h2><p className="mt-0.5 text-[10px] text-slate-500">These are directly comparable with creator profile signals.</p></div></div>
+              <div className="flex items-center gap-3"><div className="flex h-9 w-9 items-center justify-center rounded-xl bg-violet-50 text-violet-700"><WandSparkles className="h-4 w-4" /></div><div><h2 className="text-sm font-semibold text-slate-950">Capability requirements</h2><p className="mt-0.5 text-[10px] text-slate-500">These are directly comparable with creator profile and portfolio signals.</p></div></div>
               <div className="mt-6 grid gap-6 md:grid-cols-2">
                 <div><p className="text-[10px] font-bold uppercase tracking-[0.14em] text-slate-400">AI tools</p><div className="mt-3 flex flex-wrap gap-2">{brief.required_tools.length ? brief.required_tools.map((tool) => <span key={tool} className="rounded-full bg-violet-50 px-3 py-1.5 text-[10px] font-semibold text-violet-700">{tool}</span>) : <span className="text-xs text-slate-400">No required toolchain</span>}</div></div>
                 <div><p className="text-[10px] font-bold uppercase tracking-[0.14em] text-slate-400">Skills</p><div className="mt-3 flex flex-wrap gap-2">{brief.required_skills.length ? brief.required_skills.map((skill) => <span key={skill} className="rounded-full border border-slate-200 bg-white px-3 py-1.5 text-[10px] font-semibold text-slate-600">{skill}</span>) : <span className="text-xs text-slate-400">No required skills listed</span>}</div></div>
@@ -137,6 +140,8 @@ export const BriefDetail: React.FC = () => {
             <section className="surface-card rounded-[22px] p-5 sm:p-7">
               <h2 className="text-sm font-semibold text-slate-950">Delivery definition</h2>
               <div className="mt-5 grid gap-6 md:grid-cols-2">
+                <div><p className="text-[10px] font-bold uppercase tracking-[0.14em] text-slate-400">Content type</p><p className="mt-2 text-sm leading-6 text-slate-600">{brief.content_type || 'Not specified'}</p></div>
+                <div><p className="text-[10px] font-bold uppercase tracking-[0.14em] text-slate-400">Creative style</p><p className="mt-2 text-sm leading-6 text-slate-600">{brief.style || 'Not specified'}</p></div>
                 <div><p className="text-[10px] font-bold uppercase tracking-[0.14em] text-slate-400">Deliverables</p><p className="mt-2 whitespace-pre-line text-sm leading-6 text-slate-600">{brief.deliverables || 'Not specified'}</p></div>
                 <div><p className="text-[10px] font-bold uppercase tracking-[0.14em] text-slate-400">Usage rights</p><p className="mt-2 text-sm leading-6 text-slate-600">{brief.usage_rights || 'Not specified'}</p></div>
               </div>
@@ -152,7 +157,7 @@ export const BriefDetail: React.FC = () => {
 
           <aside className="space-y-4">
             <div className="surface-card rounded-[20px] p-5">
-              <div className="flex items-start gap-3"><ShieldCheck className="mt-0.5 h-4 w-4 text-violet-600" /><div><p className="text-xs font-semibold text-slate-950">Explainable matching ready</p><p className="mt-1 text-[10px] leading-5 text-slate-500">Tool, skill and category requirements can be passed directly into creator discovery instead of relying on an opaque ranking score.</p></div></div>
+              <div className="flex items-start gap-3"><ShieldCheck className="mt-0.5 h-4 w-4 text-violet-600" /><div><p className="text-xs font-semibold text-slate-950">Explainable matching ready</p><p className="mt-1 text-[10px] leading-5 text-slate-500">Content type, tool, skill and category requirements can be passed directly into creator discovery instead of relying on an opaque ranking score.</p></div></div>
               <div className="mt-4 flex items-center gap-2 text-[10px] font-semibold text-emerald-700"><CheckCircle2 className="h-3.5 w-3.5" /> Structured requirements captured</div>
             </div>
 
