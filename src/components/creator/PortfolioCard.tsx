@@ -85,10 +85,19 @@ export const PortfolioCard: React.FC<PortfolioCardProps> = ({
           <ExternalLink className="h-3.5 w-3.5" />
         </a>
 
-        {item.category && (
-          <span className="absolute bottom-3 left-3 rounded-lg border border-white/10 bg-slate-950/55 px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.12em] text-white/90 backdrop-blur">
-            {item.category}
-          </span>
+        {(item.content_type || item.category) && (
+          <div className="absolute bottom-3 left-3 flex flex-wrap gap-1.5">
+            {item.content_type && (
+              <span className="rounded-lg border border-violet-300/30 bg-violet-600/75 px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.12em] text-white backdrop-blur">
+                {item.content_type}
+              </span>
+            )}
+            {item.category && (
+              <span className="rounded-lg border border-white/10 bg-slate-950/55 px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.12em] text-white/90 backdrop-blur">
+                {item.category}
+              </span>
+            )}
+          </div>
         )}
       </div>
 
