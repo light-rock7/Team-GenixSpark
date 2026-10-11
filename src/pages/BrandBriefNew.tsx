@@ -34,9 +34,11 @@ const emptyBrief: CreativeBriefCreate = {
   status: 'open',
 };
 
-const preferExisting = (current: string | null | undefined, suggestion: string | null | undefined) => {
+const preferExisting = (current: string | null | undefined, suggestion: string | null | undefined): string | null => {
   const currentValue = current?.trim();
-  return currentValue ? current : (suggestion || current || null);
+  if (currentValue) return currentValue;
+  const suggestionValue = suggestion?.trim();
+  return suggestionValue || null;
 };
 
 export const BrandBriefNew: React.FC = () => {
