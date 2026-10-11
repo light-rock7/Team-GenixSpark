@@ -11,6 +11,7 @@ import type {
 
 export const EMPTY_DISCOVERY_FILTERS: DiscoveryFilters = {
   query: '',
+  contentTypes: [],
   aiTools: [],
   skills: [],
   specializations: [],
@@ -26,6 +27,7 @@ const includesTerm = (creator: DiscoveryCreator, term: string) => {
     creator.headline || '',
     creator.bio || '',
     creator.location || '',
+    ...creator.content_types,
     ...creator.ai_tools,
     ...creator.skills,
     ...creator.specializations,
@@ -46,6 +48,11 @@ const calculateMatch = (creator: DiscoveryCreator, filters: DiscoveryFilters): D
   if (filters.query.trim()) {
     criteria.push({ matched: includesTerm(creator, filters.query), reason: 'Search relevance' });
   }
+
+  filters.contentTypes.forEach((contentType) => {
+    const matched = creator.content_types.some((item) => normalized(item) === normalized(contentType));
+    criteria.push({ matched, reason: matched ? `Content: ${contentType}` : undefined });
+  });
 
   filters.aiTools.forEach((tool) => {
     const matched = creator.ai_tools.some((item) => normalized(item) === normalized(tool));
@@ -93,6 +100,7 @@ const calculateMatch = (creator: DiscoveryCreator, filters: DiscoveryFilters): D
 
 const passesFilters = (creator: DiscoveryCreator, filters: DiscoveryFilters) => {
   if (filters.query.trim() && !includesTerm(creator, filters.query)) return false;
+  if (!intersects(creator.content_types, filters.contentTypes)) return false;
   if (!intersects(creator.ai_tools, filters.aiTools)) return false;
   if (!intersects(creator.skills, filters.skills)) return false;
   if (!intersects(creator.specializations, filters.specializations)) return false;
@@ -108,6 +116,7 @@ const recommendationSignal = (creator: DiscoveryCreator) => {
   if (creator.bio) score += 1;
   if (creator.ai_tools.length > 0) score += 2;
   if (creator.specializations.length > 0) score += 1;
+  if (creator.content_types.length > 0) score += 1;
   score += Math.min(creator.portfolio_count, 4) * 2;
   return score;
 };
@@ -119,6 +128,7 @@ export const useCreatorDiscovery = (initialFilters?: Partial<DiscoveryFilters>) 
   const [filters, setFilters] = useState<DiscoveryFilters>(() => ({
     ...EMPTY_DISCOVERY_FILTERS,
     ...initialFilters,
+    contentTypes: initialFilters?.contentTypes || [],
     aiTools: initialFilters?.aiTools || [],
     skills: initialFilters?.skills || [],
     specializations: initialFilters?.specializations || [],
@@ -144,6 +154,7 @@ export const useCreatorDiscovery = (initialFilters?: Partial<DiscoveryFilters>) 
   }, [refresh]);
 
   const options = useMemo<DiscoveryOptions>(() => ({
+    contentTypes: uniqueSorted(creators.flatMap((creator) => creator.content_types)),
     aiTools: uniqueSorted(creators.flatMap((creator) => creator.ai_tools)),
     skills: uniqueSorted(creators.flatMap((creator) => creator.skills)),
     specializations: uniqueSorted(creators.flatMap((creator) => creator.specializations)),
@@ -151,6 +162,7 @@ export const useCreatorDiscovery = (initialFilters?: Partial<DiscoveryFilters>) 
 
   const activeFilterCount = useMemo(() => (
     (filters.query.trim() ? 1 : 0)
+    + filters.contentTypes.length
     + filters.aiTools.length
     + filters.skills.length
     + filters.specializations.length
@@ -175,7 +187,7 @@ export const useCreatorDiscovery = (initialFilters?: Partial<DiscoveryFilters>) 
     });
   }, [creators, filters, sort, activeFilterCount]);
 
-  const resetFilters = useCallback(() => setFilters({ ...EMPTY_DISCOVERY_FILTERS, aiTools: [], skills: [], specializations: [] }), []);
+  const resetFilters = useCallback(() => setFilters({ ...EMPTY_DISCOVERY_FILTERS, contentTypes: [], aiTools: [], skills: [], specializations: [] }), []);
 
   return {
     creators,
