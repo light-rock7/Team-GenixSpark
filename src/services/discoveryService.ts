@@ -32,7 +32,10 @@ type CreatorRow = {
   updated_at?: string;
 };
 
-type PortfolioCountRow = { creator_id: string };
+type PortfolioSignalRow = {
+  creator_id: string;
+  category: string | null;
+};
 
 export const getDiscoveryCreators = async (): Promise<DiscoveryCreator[]> => {
   const client = requireSupabase();
@@ -47,7 +50,7 @@ export const getDiscoveryCreators = async (): Promise<DiscoveryCreator[]> => {
       .select('*'),
     client
       .from('portfolio_items')
-      .select('creator_id')
+      .select('creator_id, category')
       .eq('is_published', true),
   ]);
 
@@ -63,13 +66,20 @@ export const getDiscoveryCreators = async (): Promise<DiscoveryCreator[]> => {
 
   const identities = (identityResult.data || []) as IdentityRow[];
   const creators = (creatorResult.data || []) as CreatorRow[];
-  const portfolioRows = (portfolioResult.data || []) as PortfolioCountRow[];
+  const portfolioRows = (portfolioResult.data || []) as PortfolioSignalRow[];
 
   const identityById = new Map(identities.map((item) => [item.id, item]));
   const portfolioCountByCreator = new Map<string, number>();
+  const contentTypesByCreator = new Map<string, Set<string>>();
 
-  portfolioRows.forEach(({ creator_id }) => {
+  portfolioRows.forEach(({ creator_id, category }) => {
     portfolioCountByCreator.set(creator_id, (portfolioCountByCreator.get(creator_id) || 0) + 1);
+    const normalizedCategory = category?.trim();
+    if (normalizedCategory) {
+      const contentTypes = contentTypesByCreator.get(creator_id) || new Set<string>();
+      contentTypes.add(normalizedCategory);
+      contentTypesByCreator.set(creator_id, contentTypes);
+    }
   });
 
   return creators
@@ -95,6 +105,7 @@ export const getDiscoveryCreators = async (): Promise<DiscoveryCreator[]> => {
         created_at: creator.created_at || identity.created_at,
         updated_at: creator.updated_at,
         portfolio_count: portfolioCountByCreator.get(creator.user_id) || 0,
+        content_types: Array.from(contentTypesByCreator.get(creator.user_id) || []).sort((a, b) => a.localeCompare(b)),
       };
     })
     .filter((creator): creator is DiscoveryCreator => creator !== null);
