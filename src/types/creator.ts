@@ -44,6 +44,7 @@ export interface PortfolioItem {
   thumbnail_url: string | null;
   media_type: PortfolioMediaType;
   category: string | null;
+  content_type: string | null;
   ai_tools: string[];
   skills: string[];
   prompt_summary: string | null;
@@ -61,6 +62,7 @@ export interface PortfolioItemCreate {
   thumbnail_url?: string | null;
   media_type: PortfolioMediaType;
   category: string | null;
+  content_type: string | null;
   ai_tools: string[];
   skills: string[];
   prompt_summary: string | null;
