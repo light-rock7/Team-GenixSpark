@@ -4,10 +4,12 @@ export type DiscoverySort = 'best_fit' | 'experience' | 'newest';
 
 export interface DiscoveryCreator extends CreatorProfile {
   portfolio_count: number;
+  content_types: string[];
 }
 
 export interface DiscoveryFilters {
   query: string;
+  contentTypes: string[];
   aiTools: string[];
   skills: string[];
   specializations: string[];
@@ -28,6 +30,7 @@ export interface DiscoveryResult {
 }
 
 export interface DiscoveryOptions {
+  contentTypes: string[];
   aiTools: string[];
   skills: string[];
   specializations: string[];
