@@ -34,6 +34,7 @@ type CreatorRow = {
 
 type PortfolioSignalRow = {
   creator_id: string;
+  content_type: string | null;
   category: string | null;
 };
 
@@ -50,7 +51,7 @@ export const getDiscoveryCreators = async (): Promise<DiscoveryCreator[]> => {
       .select('*'),
     client
       .from('portfolio_items')
-      .select('creator_id, category')
+      .select('creator_id, content_type, category')
       .eq('is_published', true),
   ]);
 
@@ -72,12 +73,12 @@ export const getDiscoveryCreators = async (): Promise<DiscoveryCreator[]> => {
   const portfolioCountByCreator = new Map<string, number>();
   const contentTypesByCreator = new Map<string, Set<string>>();
 
-  portfolioRows.forEach(({ creator_id, category }) => {
+  portfolioRows.forEach(({ creator_id, content_type, category }) => {
     portfolioCountByCreator.set(creator_id, (portfolioCountByCreator.get(creator_id) || 0) + 1);
-    const normalizedCategory = category?.trim();
-    if (normalizedCategory) {
+    const signal = content_type?.trim() || category?.trim();
+    if (signal) {
       const contentTypes = contentTypesByCreator.get(creator_id) || new Set<string>();
-      contentTypes.add(normalizedCategory);
+      contentTypes.add(signal);
       contentTypesByCreator.set(creator_id, contentTypes);
     }
   });
